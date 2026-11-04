@@ -1,0 +1,2270 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoDesign & BaseArq - Estúdio Luminotécnico CAD V3.2</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background-color: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
+    .card { background-color: #1e293b; border: 1px solid #334155; border-radius: 0.75rem; }
+    input[type="number"], input[type="text"], input[type="url"], select, textarea {
+      background-color: #0f172a !important; border: 1px solid #475569 !important; color: #f8fafc !important;
+    }
+    input::placeholder, textarea::placeholder { color: #475569 !important; font-weight: normal; }
+    input:focus, select:focus, textarea:focus { border-color: #f97316 !important; outline: none !important; }
+    optgroup { background-color: #0f172a; color: #fb923c; font-weight: bold; }
+    option { background-color: #1e293b; color: #f8fafc; font-weight: normal; }
+    
+    .kelvin-slider {
+      -webkit-appearance: none; appearance: none; width: 100%; height: 12px; border-radius: 999px;
+      background: linear-gradient(90deg, #ff7b00 0%, #ffb74d 22%, #ffd584 35%, #fff8e7 55%, #e8f4fd 78%, #8ab4f8 100%);
+      outline: none; cursor: pointer; border: 1px solid #475569;
+    }
+    .kelvin-slider::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none; width: 22px; height: 22px; border-radius: 50%;
+      background: #ffffff; border: 3px solid #0f172a;
+      box-shadow: 0 0 10px rgba(0,0,0,0.8), 0 0 0 2px #f97316; cursor: grab;
+    }
+
+    #svgForro { user-select: none; -webkit-user-select: none; touch-action: none; }
+    .cone-calor { mix-blend-mode: screen; pointer-events: none; }
+    .handle-vertice { cursor: move; transition: r 0.15s; }
+    .handle-vertice:hover { r: 8px; }
+
+    #memorialPrintArea { display: none; }
+
+    @media print {
+      @page { size: A4 portrait; margin: 10mm; }
+      body { background-color: #ffffff !important; color: #0f172a !important; padding: 0 !important; margin: 0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      #appScreenArea, #modalTutorial { display: none !important; }
+      #memorialPrintArea { display: block !important; width: 100%; }
+      .quebra-pagina-croqui { page-break-before: always; break-before: page; padding-top: 2mm; }
+    }
+  </style>
+</head>
+<body class="p-4 md:p-6">
+
+  <!-- ========================================================================= -->
+  <!-- MODAL DE TUTORIAL / GUIA RÁPIDO V3.2                                      -->
+  <!-- ========================================================================= -->
+  <div id="modalTutorial" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="card max-w-3xl w-full p-6 border-orange-500/50 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-widest text-orange-400">Manual do Estúdio Luminotécnico V3.2</span>
+          <h2 class="text-lg font-extrabold text-white">Guia Rápido: Cenário com Sombra & Prancha Executiva de Obra</h2>
+        </div>
+        <button type="button" onclick="fecharTutorial()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-sm">✕</button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-300">
+        <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
+          <div class="font-bold text-orange-400 text-sm">1. Cenário Adaptativo + Projeção de Sombras</div>
+          <p>Ao escolher um cômodo no Passo 1 (ex: Cozinha, Dormitório, Banheiro, Sala de Jantar), a barra <strong>🛋️ Inserir Cenário</strong> muda automaticamente trazendo os móveis daquele ambiente.</p>
+          <p>Cada móvel possui altura física e <strong>projeta sombra real no piso</strong> conforme a posição das luminárias que você espalhar no teto!</p>
+        </div>
+
+        <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
+          <div class="font-bold text-sky-400 text-sm">2. Prancha Executiva em 2 Páginas (Fit to Page)</div>
+          <p>Ao clicar em <strong>🖨️ Memorial PDF</strong>, o documento agora sai dividido em <strong>2 páginas A4</strong>:</p>
+          <ul class="list-disc list-inside text-[11px] text-slate-400 space-y-0.5">
+            <li><strong>Página 1:</strong> Laudo técnico ABNT + Lista de compras + <strong>Guia Prático para Pedreiro, Gesseiro e Eletricista</strong>.</li>
+            <li><strong>Página 2 (Fit to Page):</strong> Croqui gigante cotado nos eixos externos ($X$ e $Y$) + Tabela de Trena ponto a ponto (<code>P1, P2...</code>).</li>
+          </ul>
+        </div>
+
+        <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
+          <div class="font-bold text-emerald-400 text-sm">3. Mover em Grupo ou Individual</div>
+          <p>Use a chave <strong>👆 Mover Individual</strong> (move 1 peça) ou <strong>🔗 Mover Grupo/Circuito</strong> (move todas as peças daquele circuito juntas). Clique com o botão direito para girar 90°.</p>
+        </div>
+
+        <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
+          <div class="font-bold text-amber-400 text-sm">4. Formatos Irregulares ("L", Trapézio, Polígono)</div>
+          <p>Arraste as bolinhas laranjas nos cantos das paredes para desenhar dentes ou recortes em escala real. O motor recalcula Área, Perímetro e Fator $K$ instantaneamente.</p>
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-2 border-t border-slate-700">
+        <button type="button" onclick="fecharTutorial()" class="bg-orange-500 hover:bg-orange-400 text-slate-950 font-bold text-xs px-5 py-2 rounded-lg transition">
+          Fechar Guia
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- ÁREA 1: INTERFACE DO ESTÚDIO LUMINOTÉCNICO V3.2                           -->
+  <!-- ========================================================================= -->
+  <div id="appScreenArea" class="max-w-7xl mx-auto space-y-5">
+    
+    <!-- HEADER -->
+    <div class="card p-4 md:p-5 border-l-4 border-l-emerald-500 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-emerald-950 border border-emerald-500/50 flex flex-col items-center justify-center shadow-lg shrink-0">
+          <span class="text-lg font-black tracking-tighter text-emerald-400 leading-none">ECO</span>
+          <span class="text-[8px] font-bold uppercase tracking-widest text-emerald-200 mt-0.5">DESIGN</span>
+        </div>
+        <div>
+          <div class="flex flex-wrap items-center gap-2">
+            <h1 class="text-lg md:text-xl font-extrabold tracking-tight text-white">EcoDesign Interiores e Paisagismo</h1>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-orange-500/20 text-orange-300 border border-orange-500/30">
+              BaseArq® CAD Engine V3.2
+            </span>
+          </div>
+          <p class="text-xs text-slate-400 mt-0.5">
+            Estúdio Luminotécnico Multicircuito, Projeção de Sombras & Prancha Executiva de Obra • <span class="text-slate-300">ABNT NBR ISO/CIE 8995-1</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2 self-end lg:self-center">
+        <input type="text" id="nomeProjetoInput" placeholder="Cliente / Ambiente (p/ Memorial)" 
+               class="rounded-lg px-3 py-1.5 text-xs w-48" oninput="atualizarTudo()">
+        <button type="button" onclick="carregarExemploSalaEmL()" 
+                class="bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-600/50 text-xs font-bold px-3 py-1.5 rounded-lg transition"
+                title="Preenche um exemplo completo de Sala em L com móveis, sombras e 3 circuitos">
+          ✨ Testar Exemplo Sala em "L"
+        </button>
+        <button type="button" onclick="abrirTutorial()" 
+                class="bg-slate-800 hover:bg-slate-700 text-orange-300 border border-orange-500/40 text-xs font-bold px-3 py-1.5 rounded-lg transition">
+          ❓ Guia V3.2
+        </button>
+        <button type="button" onclick="gerarMemorialPDF()" 
+                class="bg-sky-950/80 hover:bg-sky-900 text-sky-200 border border-sky-500/50 text-xs font-bold px-3.5 py-1.5 rounded-lg transition shadow-sm">
+          🖨️ Memorial PDF (2 Págs)
+        </button>
+        <button type="button" onclick="limparFormulario()" 
+                class="bg-red-950/60 hover:bg-red-900/80 text-red-200 border border-red-700/60 text-xs font-bold px-3 py-1.5 rounded-lg transition">
+          🗑️ Limpar
+        </button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+      
+      <!-- COLUNA ESQUERDA: PARÂMETROS E CONSTRUTOR DE CIRCUITOS (6 COLUNAS) -->
+      <div class="lg:col-span-6 space-y-5">
+        
+        <!-- 1. Setor, Ambiente, Iluminância e Temperatura de Cor -->
+        <div class="card p-4 space-y-3.5">
+          <div class="flex justify-between items-center">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-orange-400">1. Tipologia, Ambiente (E) e Temperatura de Cor (K)</h2>
+            <span class="text-[10px] text-slate-400 font-mono">NBR ISO/CIE 8995-1</span>
+          </div>
+          
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" id="tab_residencial" onclick="selecionarSetor('residencial')" class="py-1.5 px-2 rounded-lg text-xs font-bold border transition flex items-center justify-center gap-1">🏠 Residencial</button>
+            <button type="button" id="tab_comercial" onclick="selecionarSetor('comercial')" class="py-1.5 px-2 rounded-lg text-xs font-bold border transition flex items-center justify-center gap-1">🏢 Comercial / Educ.</button>
+            <button type="button" id="tab_externo" onclick="selecionarSetor('externo')" class="py-1.5 px-2 rounded-lg text-xs font-bold border transition flex items-center justify-center gap-1">🌿 Paisagismo / Ext.</button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="md:col-span-2">
+              <label class="block text-[11px] text-slate-400 mb-1">Ambiente / Tarefa Visual (Adapta móveis e Lux)</label>
+              <select id="ambiente" class="w-full rounded-lg p-2 text-xs" onchange="atualizarAmbiente()"></select>
+            </div>
+            <div>
+              <label class="block text-[11px] text-orange-300 font-semibold mb-1">Meta E (Lux) *</label>
+              <div class="flex gap-1">
+                <input type="number" id="luxInput" value="" placeholder="Ex: 200" step="50" min="10" class="w-full rounded-lg p-2 text-xs font-bold" oninput="atualizarTudo()">
+                <select id="criterioLux" class="rounded-lg p-1.5 text-[11px]" onchange="mudarCriterioLux()">
+                  <option value="intermediario" selected>Padrão</option>
+                  <option value="maximo">Máx</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slider Kelvin -->
+          <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800 space-y-2">
+            <div class="flex justify-between items-center">
+              <div>
+                <label class="text-[11px] text-orange-300 font-semibold block">Temperatura de Cor Geral (K):</label>
+                <span id="lblFaixaRecomendadaK" class="text-[10px] text-slate-400">Selecione um ambiente acima</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <input type="number" id="tempCorInput" value="" placeholder="3000" min="2000" max="6500" step="50" class="w-20 rounded px-2 py-1 text-xs font-bold text-center" oninput="sincronizarKelvin('input')">
+                <span class="text-xs font-bold text-slate-400">K</span>
+              </div>
+            </div>
+            <input type="range" id="tempCorSlider" min="2000" max="6500" step="50" value="3000" class="kelvin-slider" oninput="sincronizarKelvin('slider')">
+            <div class="grid grid-cols-6 gap-1 pt-0.5">
+              <button type="button" id="btnK2200" onclick="definirKelvin(2200)" class="text-[10px] py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-400 font-medium">2200K</button>
+              <button type="button" id="btnK2700" onclick="definirKelvin(2700)" class="text-[10px] py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-300 font-medium">2700K</button>
+              <button type="button" id="btnK3000" onclick="definirKelvin(3000)" class="text-[10px] py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 text-yellow-200 font-medium">3000K</button>
+              <button type="button" id="btnK4000" onclick="definirKelvin(4000)" class="text-[10px] py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-medium">4000K</button>
+              <button type="button" id="btnK5000" onclick="definirKelvin(5000)" class="text-[10px] py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 text-sky-200 font-medium">5000K</button>
+              <button type="button" id="btnK6500" onclick="definirKelvin(6500)" class="text-[10px] py-1 rounded bg-slate-800 hover:bg-slate-700 border border-slate-700 text-sky-400 font-medium">6500K</button>
+            </div>
+          </div>
+
+          <div id="boxAlertaKelvin" class="p-2 rounded-lg text-[11px] border bg-slate-900/40 border-slate-800 text-slate-400">
+            Selecione um ambiente ou defina a Temperatura de Cor (K).
+          </div>
+        </div>
+
+        <!-- 2. Formato do Cômodo, Geometria e Refletâncias -->
+        <div class="card p-4 space-y-3.5">
+          <div class="flex flex-wrap justify-between items-center gap-2">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-orange-400">2. Formato da Planta, Dimensões e Fator K</h2>
+            <span class="text-[10px] font-mono text-slate-400">K = (2 × Área) / (Perímetro × A)</span>
+          </div>
+
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+            <div class="md:col-span-2">
+              <label class="block text-[11px] text-sky-300 font-semibold mb-1">Formato Geométrico do Ambiente</label>
+              <select id="formatoSalaSelect" class="w-full rounded-lg p-2 text-xs font-bold" onchange="mudarFormatoSala()">
+                <option value="retangulo" selected>⬛ Retangular / Quadrado Padrão</option>
+                <option value="ele">📐 Planta em "L" (Com Dente Editável)</option>
+                <option value="trapezio">▱ Trapézio / Paredes Inclinadas</option>
+                <option value="triangulo">🔺 Triângulo</option>
+                <option value="elipse">⚪ Círculo / Sala Oval (Elipse)</option>
+                <option value="poligono">✏️ Polígono Customizado (Arrastar Vértices)</option>
+              </select>
+            </div>
+            <div class="flex items-end">
+              <button type="button" onclick="adicionarVerticePoligono()" id="btnAddVertice"
+                      class="w-full py-2 px-2 rounded-lg text-[11px] font-bold bg-slate-800 hover:bg-slate-700 text-sky-300 border border-sky-500/40 transition">
+                ➕ Dividir Parede (+Vértice)
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div>
+              <label class="block text-[11px] text-orange-300 font-semibold mb-1">Largura Base C (m) *</label>
+              <input type="number" id="comp" value="" placeholder="Ex: 4.50" step="0.05" min="0.5" class="w-full rounded-lg p-2 text-xs font-bold" oninput="reescalarGeometriaPorInputs()">
+            </div>
+            <div>
+              <label class="block text-[11px] text-orange-300 font-semibold mb-1">Comp. Base L (m) *</label>
+              <input type="number" id="larg" value="" placeholder="Ex: 9.40" step="0.05" min="0.5" class="w-full rounded-lg p-2 text-xs font-bold" oninput="reescalarGeometriaPorInputs()">
+            </div>
+            <div>
+              <label class="block text-[11px] text-slate-400 mb-1">Pé-Direito (m)</label>
+              <input type="number" id="peDireito" value="" placeholder="Ex: 2.70" step="0.05" min="1.5" class="w-full rounded-lg p-2 text-xs" oninput="atualizarTudo()">
+            </div>
+            <div>
+              <label class="block text-[11px] text-orange-300 font-semibold mb-1" title="Distância da luminária até o plano de trabalho">Altura Útil A (m) *</label>
+              <input type="number" id="alturaUtilInput" value="" placeholder="Ex: 1.90" step="0.05" min="0.5" class="w-full rounded-lg p-2 text-xs font-bold border-orange-500" oninput="atualizarTudo()">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 md:grid-cols-5 gap-2 pt-1">
+            <div>
+              <label class="block text-[10px] text-slate-400 mb-0.5">Reflet. Teto</label>
+              <select id="corTeto" class="w-full rounded p-1.5 text-[11px]" onchange="atualizarTudo()">
+                <option value="80" selected>Branco (80%)</option>
+                <option value="50">Claro (50%)</option>
+                <option value="30">Médio (30%)</option>
+                <option value="10">Escuro (10%)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[10px] text-slate-400 mb-0.5">Reflet. Parede</label>
+              <select id="corParede" class="w-full rounded p-1.5 text-[11px]" onchange="atualizarTudo()">
+                <option value="80">Branca (80%)</option>
+                <option value="50" selected>Clara (50%)</option>
+                <option value="30">Média (30%)</option>
+                <option value="10">Escura (10%)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[10px] text-slate-400 mb-0.5">Reflet. Piso</label>
+              <select id="corPiso" class="w-full rounded p-1.5 text-[11px]" onchange="atualizarTudo()">
+                <option value="50">Claro (50%)</option>
+                <option value="30" selected>Médio (30%)</option>
+                <option value="10">Escuro (10%)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[10px] text-slate-400 mb-0.5">Manutenção (d)</label>
+              <select id="fatorD" class="w-full rounded p-1.5 text-[11px]" onchange="atualizarTudo()">
+                <option value="0.80" selected>Limpo (0.80)</option>
+                <option value="0.70">Médio (0.70)</option>
+                <option value="0.60">Externo (0.60)</option>
+              </select>
+            </div>
+            <div>
+              <div class="flex justify-between items-center mb-0.5">
+                <label class="text-[10px] text-orange-300 font-semibold">Fator η</label>
+                <input type="checkbox" id="chkEtaManual" onchange="alternarEtaManual()" title="Digitar η manualmente">
+              </div>
+              <input type="number" id="etaInput" value="" placeholder="Auto" step="0.01" min="0.1" max="1.0" disabled class="w-full rounded p-1.5 text-xs font-bold opacity-75" oninput="atualizarTudo()">
+            </div>
+          </div>
+
+          <div class="text-[11px] text-slate-400 flex flex-wrap justify-between gap-2 bg-slate-900/70 p-2 rounded-lg border border-slate-800">
+            <span>Área Real: <strong id="lblArea" class="text-white">-- m²</strong></span>
+            <span>Perímetro: <strong id="lblPerimetro" class="text-slate-200">-- m</strong></span>
+            <span>Fator K: <strong id="lblFatorK" class="text-orange-400">--</strong></span>
+            <span>Esp. Máx (1,5×A): <strong id="lblMaxEsp" class="text-sky-300">-- m</strong></span>
+          </div>
+        </div>
+
+        <!-- 3. CONSTRUTOR E GERENCIADOR DE MÚLTIPLAS LUMINÁRIAS -->
+        <div class="card p-4 space-y-3.5 border-orange-500/30">
+          <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+            <div>
+              <h2 class="text-xs font-bold uppercase tracking-wider text-orange-400">3. Adicionar Luminárias ao Ambiente (Multicircuito)</h2>
+              <p class="text-[10px] text-slate-400">Cada ponto recebe um código (P1, P2...) com cota exata para o gesseiro/eletricista</p>
+            </div>
+            <button type="button" onclick="toggleExtratorTexto()" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-orange-300 px-2 py-1 rounded border border-slate-700 font-semibold">
+              🪄 Extrair de Texto
+            </button>
+          </div>
+
+          <div id="boxExtratorRegex" class="hidden bg-slate-900 p-2.5 rounded-lg border border-slate-700 space-y-1.5">
+            <textarea id="txtColadoSite" rows="2" placeholder="Cole a descrição do site da loja (Ex: 'Spot Dicroica 7W 525 lumens 36° 3000K 10x10cm')..." class="w-full rounded p-1.5 text-xs"></textarea>
+            <button type="button" onclick="extrairDadosDoTextoColado()" class="bg-orange-500 text-slate-950 font-bold text-[11px] px-3 py-1 rounded">⚡ Preencher Dados</button>
+          </div>
+
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-1">Selecionar Modelo no Catálogo (Preenche Lúmens, Watts, Ângulo e Medidas)</label>
+            <select id="presetLuz" class="w-full rounded-lg p-2 text-xs" onchange="atualizarLuminariaPorPreset()">
+              <option value="" selected>-- Escolha um modelo para configurar e inserir --</option>
+              
+              <optgroup label="1. Iluminação Difusa: Painéis Modulares, Plafons e Bulbos">
+                <option value="1260|18|1|painel_quad|0.22|0.22|120">Painel Plafon LED Quadrado 18W (1.260 lm | 120° | 22×22cm)</option>
+                <option value="1680|24|1|painel_quad|0.29|0.29|120">Painel Plafon LED Quadrado 24W (1.680 lm | 120° | 29×29cm)</option>
+                <option value="1260|18|1|painel_red|0.22|0.22|120">Painel Plafon LED Redondo 18W (1.260 lm | 120° | Ø22cm)</option>
+                <option value="1680|24|1|painel_red|0.30|0.30|120">Painel Plafon LED Redondo 24W (1.680 lm | 120° | Ø30cm)</option>
+                <option value="3600|36|1|painel_quad|0.60|0.60|120">Painel Modular Corporativo/Escolar 60×60cm (36W - 3.600 lm | 120°)</option>
+                <option value="4000|40|1|painel_quad|1.20|0.30|120">Painel Plafon Linear 120×30cm (40W - 4.000 lm | 120°)</option>
+                <option value="806|10|2|painel_red|0.30|0.30|120">Plafon Redondo Sobrepor Ø30cm c/ 2x Bulbo E27 (2x 806 lm | 120°)</option>
+              </optgroup>
+
+              <optgroup label="2. Spots e Iluminação Direcionável (Com Ângulo de Facho)">
+                <option value="525|7|1|spot|0.10|0.10|36">Spot GU10 MR16 / Dicroica Simples (525 lm | 36° | 10×10cm)</option>
+                <option value="525|7|2|spot|0.20|0.10|36">Spot Embutir Duplo Dicroica MR16 (2x 525 lm | 36° | 20×10cm)</option>
+                <option value="490|7|1|spot|0.12|0.12|50">Spot Direcionável / Trilho Cristall 7W (490 lm | 50° | 12×12cm)</option>
+                <option value="630|9|1|spot|0.12|0.12|50">Spot Direcionável p/ Trilho 9W (630 lm | 50° | 12×12cm)</option>
+                <option value="450|7|1|spot|0.12|0.12|24">Spot AR70 Antiofuscante Foco Fechado (450 lm | 24° | 12×12cm)</option>
+                <option value="950|12|1|spot|0.17|0.17|24">Spot AR111 Destaque Lojas/Pé-Direito (950 lm | 24° | 17×17cm)</option>
+                <option value="550|7|1|spot|0.10|0.10|36">Lâmpada PAR20 E27 Aconchego (550 lm | 36° | 10×10cm)</option>
+                <option value="950|11|1|spot|0.13|0.13|36">Lâmpada PAR30 E27 Comercial (950 lm | 36° | 13×13cm)</option>
+                <option value="250|3|1|spot|0.05|0.05|30">Mini Spot GU MR11 Marcenaria/Nicho (250 lm | 30° | 5×5cm)</option>
+              </optgroup>
+
+              <optgroup label="3. Pendentes, Lustres, Abajures e Fitas de Sanca">
+                <option value="400|4|6|painel_red|0.50|0.50|110">Lustre / Pendente Mesa Jantar Ø50cm (6x 400 lm = 2.400 lm | 110°)</option>
+                <option value="806|9|3|painel_red|0.45|0.45|100">Pendente Triplo Mesa Jantar c/ Bulbo (3x 806 lm = 2.418 lm | 100°)</option>
+                <option value="420|5|1|painel_red|0.25|0.25|90">Abajur / Candeeiro de Mesa (1x 420 lm | 5W | 90° | Ø25cm)</option>
+                <option value="480|9|1|painel_quad|0.18|0.10|80">Arandela de Parede Duplo Facho (480 lm | 9W | 80°)</option>
+                <option value="1000|12|1|linear|1.00|0.03|120">Fita de LED Sanca Difusa - Módulo 1 Metro (1.000 lm/m | 12W | 120°)</option>
+                <option value="1800|20|1|linear|1.00|0.04|110">Perfil Linear LED Embutir - Módulo 1 Metro (1.800 lm/m | 20W | 110°)</option>
+              </optgroup>
+
+              <optgroup label="4. Luminárias Tubulares Escolares/Comerciais">
+                <option value="2200|20|2|tubular|1.22|0.25|120">Luminária Tubular Calha Dupla 120cm (2x 2.200 lm | 120° | 1,22×0,25m)</option>
+                <option value="1850|18|2|tubular|1.22|0.25|120">Luminária Tubular LED T8 120cm Dupla (2x 1.850 lm | 120° | 1,22×0,25m)</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-3 md:grid-cols-6 gap-2">
+            <div>
+              <label class="block text-[10px] text-orange-300 font-semibold mb-0.5">Lâmp/Peça</label>
+              <input type="number" id="qtdLampPorPonto" value="" placeholder="1" min="1" max="24" class="w-full rounded p-1.5 text-xs font-bold">
+            </div>
+            <div>
+              <label class="block text-[10px] text-orange-300 font-semibold mb-0.5">Lúmens (1x)</label>
+              <input type="number" id="lumens" value="" placeholder="525" step="50" min="10" class="w-full rounded p-1.5 text-xs font-bold">
+            </div>
+            <div>
+              <label class="block text-[10px] text-slate-400 mb-0.5">Watts (1x)</label>
+              <input type="number" id="watts" value="" placeholder="7" min="1" class="w-full rounded p-1.5 text-xs">
+            </div>
+            <div>
+              <label class="block text-[10px] text-amber-300 font-semibold mb-0.5">Abertura (°)</label>
+              <input type="number" id="anguloFacho" value="" placeholder="36" min="10" max="160" step="2" class="w-full rounded p-1.5 text-xs font-bold border-amber-500/50">
+            </div>
+            <div>
+              <label class="block text-[10px] text-sky-300 font-semibold mb-0.5">Comp (m)</label>
+              <input type="number" id="dimCompPeca" value="" placeholder="0.10" step="0.02" min="0.02" class="w-full rounded p-1.5 text-xs">
+            </div>
+            <div>
+              <label class="block text-[10px] text-sky-300 font-semibold mb-0.5">Larg (m)</label>
+              <input type="number" id="dimLargPeca" value="" placeholder="0.10" step="0.02" min="0.02" class="w-full rounded p-1.5 text-xs">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <input type="text" id="nomeComercialLum" placeholder="Nome do Circuito / Peça (Ex: Pendente Mesa Jantar)" class="w-full rounded p-1.5 text-xs">
+            <input type="url" id="linkComercialLum" placeholder="Link da Loja (Opcional - sai no Memorial PDF)" class="w-full rounded p-1.5 text-xs">
+          </div>
+
+          <!-- Botões de Inserção Multicircuito -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-2 pt-1">
+            <button type="button" onclick="inserirCircuitoNoAmbiente('malha_auto')" 
+                    class="py-2 px-2.5 rounded-lg text-xs font-bold bg-orange-500 hover:bg-orange-400 text-slate-950 transition shadow">
+              ⚡ Distribuir Malha Auto
+            </button>
+            <button type="button" onclick="inserirCircuitoNoAmbiente('bordas')" 
+                    class="py-2 px-2.5 rounded-lg text-xs font-bold bg-sky-500 hover:bg-sky-400 text-slate-950 transition shadow">
+              📐 Distribuir nas Laterais
+            </button>
+            <div class="flex gap-1">
+              <input type="number" id="qtdAvulsaInput" value="1" min="1" max="40" class="w-14 rounded-lg p-1.5 text-center text-xs font-bold">
+              <button type="button" onclick="inserirCircuitoNoAmbiente('avulso')" 
+                      class="w-full py-2 px-2 rounded-lg text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-slate-950 transition shadow">
+                ➕ Somar Peça(s)
+              </button>
+            </div>
+          </div>
+
+          <!-- Lista de Circuitos Ativos -->
+          <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 space-y-2">
+            <div class="flex justify-between items-center">
+              <span class="text-[11px] font-bold uppercase tracking-wider text-slate-300">📋 Circuitos / Luminárias no Ambiente (<span id="lblQtdCircuitos">0</span>)</span>
+              <span class="text-[10px] text-slate-400">Clique num circuito p/ selecionar o grupo</span>
+            </div>
+            <div id="listaCircuitosContainer" class="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+              <div class="text-xs text-slate-500 text-center py-2">Nenhuma luminária inserida ainda.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- COLUNA DIREITA: LAUDO + PLANTA CAD INTERATIVA COM SOMBRAS E CENÁRIO CONTEXTUAL -->
+      <div class="lg:col-span-6 space-y-5">
+        
+        <!-- LAUDO CONSOLIDADO MULTICIRCUITO -->
+        <div class="card p-5 border-orange-500/40 bg-gradient-to-br from-slate-800 to-slate-900 space-y-3.5">
+          <div class="flex justify-between items-center">
+            <span class="text-xs uppercase font-bold tracking-wider text-orange-400">Laudo Luminotécnico Consolidado (Soma dos Circuitos)</span>
+            <span class="text-xs font-mono text-slate-400">E = (∑Φ · η · d) / Área</span>
+          </div>
+
+          <div class="grid grid-cols-4 gap-2 text-center py-2.5 bg-slate-950/60 rounded-xl border border-slate-800">
+            <div>
+              <span class="block text-[10px] text-slate-400">Meta Alvo (E)</span>
+              <span id="resMetaLux" class="text-lg font-bold text-slate-200">-- lx</span>
+              <span class="block text-[9px] text-slate-500">norma ABNT</span>
+            </div>
+            <div class="border-x border-slate-800">
+              <span class="block text-[10px] text-orange-400 font-semibold">Peças no Teto</span>
+              <span id="resAdotado" class="text-2xl font-extrabold text-white">0</span>
+              <span id="resTotalLampadas" class="block text-[10px] text-orange-300">0 lâmpadas</span>
+            </div>
+            <div class="border-r border-slate-800">
+              <span class="block text-[10px] text-sky-300 font-semibold">Fluxo / Potência</span>
+              <span id="resFluxoTotal" class="text-sm font-bold text-white block mt-1">0 lm</span>
+              <span id="resPotTotal" class="block text-[10px] text-slate-400">0 W</span>
+            </div>
+            <div>
+              <span class="block text-[10px] text-emerald-400 font-semibold">Iluminância Real</span>
+              <span id="resLuxReal" class="text-2xl font-extrabold text-emerald-400">0 lx</span>
+              <span id="lblPctMeta" class="block text-[10px] text-slate-400">0% da meta</span>
+            </div>
+          </div>
+
+          <div id="boxAlerta" class="p-2.5 rounded-lg text-xs border bg-slate-900/50 border-slate-700 text-slate-400">
+            Defina as dimensões do cômodo no Passo 2 e adicione luminárias no Passo 3.
+          </div>
+        </div>
+
+        <!-- ESTÚDIO GRÁFICO CAD: MAPA DE CALOR, SOMBRAS, COTAS E CENÁRIO CONTEXTUAL -->
+        <div class="card p-4 space-y-3.5">
+          <div class="flex flex-wrap justify-between items-center gap-2 border-b border-slate-800 pb-2.5">
+            <div class="flex flex-wrap items-center gap-1.5">
+              <button type="button" id="btnToggleHeatmap" onclick="alternarMapaCalor()" 
+                      class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 shadow transition flex items-center gap-1">
+                🔥 Mapa de Calor: ON
+              </button>
+              <button type="button" id="btnToggleCotas" onclick="alternarCotasVisuais()" 
+                      class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-sky-500/20 text-sky-300 border border-sky-500/40 transition flex items-center gap-1">
+                📏 Cotas & Eixos: ON
+              </button>
+              <button type="button" id="btnToggleSombras" onclick="alternarSombrasCenario()" 
+                      class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40 transition flex items-center gap-1"
+                      title="Projeta a sombra dos móveis no piso conforme a direção das luminárias">
+                🌗 Sombras: ON
+              </button>
+            </div>
+
+            <!-- Modo de Movimento (Individual vs Grupo) -->
+            <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-lg border border-slate-700">
+              <button type="button" id="btnArrasteIndiv" onclick="definirModoArraste('individual')" 
+                      class="px-2 py-1 rounded text-[11px] font-bold bg-orange-500 text-slate-950 transition">
+                👆 Mover Individual
+              </button>
+              <button type="button" id="btnArrasteGrupo" onclick="definirModoArraste('grupo')" 
+                      class="px-2 py-1 rounded text-[11px] font-bold text-slate-300 hover:bg-slate-800 transition">
+                🔗 Mover Grupo
+              </button>
+            </div>
+          </div>
+
+          <!-- BARRA DINÂMICA DE CENÁRIO / MOBILIÁRIO (ADAPTA AO CÔMODO SELECIONADO + SOMBRA) -->
+          <div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 space-y-2 text-[11px]">
+            <div class="flex justify-between items-center">
+              <span id="lblTituloCenario" class="text-emerald-300 font-semibold">🛋️ Inserir Cenário do Ambiente (Com Projeção de Sombra):</span>
+              <span class="text-[10px] text-slate-400">Muda conforme o cômodo do Passo 1</span>
+            </div>
+            <div id="barraBotoesCenario" class="flex flex-wrap items-center gap-1.5">
+            </div>
+          </div>
+
+          <!-- Painel de Inspeção do Item Selecionado -->
+          <div id="barraInspecaoPeca" class="bg-slate-950/90 px-3 py-2 rounded-xl border border-slate-800 flex flex-wrap justify-between items-center gap-2 text-xs">
+            <div id="txtInspecaoPeca" class="text-slate-400">
+              💡 Clique ou arraste qualquer luminária (<code>P1, P2...</code>), móvel ou canto de parede na planta abaixo.
+            </div>
+            <div id="acoesPecaSelecionada" class="hidden items-center gap-1.5">
+              <button type="button" onclick="girarItemSelecionado()" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-sky-300 border border-sky-500/40 font-bold text-[11px]">
+                🔄 Girar (90°)
+              </button>
+              <button type="button" onclick="duplicarItemSelecionado()" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-emerald-500/40 font-bold text-[11px]">
+                ➕ Duplicar
+              </button>
+              <button type="button" onclick="excluirItemSelecionado()" class="px-2 py-1 rounded bg-red-950/80 hover:bg-red-900 text-red-200 border border-red-700/50 font-bold text-[11px]">
+                🗑️ Excluir
+              </button>
+            </div>
+          </div>
+
+          <!-- CANVAS VETORIAL SVG INTERATIVO -->
+          <div class="flex flex-col items-center justify-center bg-slate-950 p-3 rounded-xl border border-slate-800 relative">
+            <svg id="svgForro" width="540" height="440" viewBox="0 0 540 440" class="w-full max-w-[540px] h-auto rounded bg-slate-950"></svg>
+            
+            <div class="w-full flex flex-wrap justify-between items-center text-[11px] text-slate-400 mt-2 px-1 gap-2">
+              <span id="legendaForro">Planta Vetorial em Escala com Eixos Cotados</span>
+              <span id="lblInfoCone" class="text-amber-300 font-semibold">Cones e sombras ativos</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <footer class="border-t border-slate-800 pt-4 pb-2 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500 gap-2">
+      <div><strong class="text-emerald-400">EcoDesign Interiores e Paisagismo</strong> • Direção Técnica: Adriano Sanches Pastre</div>
+      <div>Tecnologia & Motor Matemático: <strong class="text-orange-400">BaseArq® SaaS Platform V3.2</strong> • Todos os direitos reservados</div>
+    </footer>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- ÁREA 2: MEMORIAL EXECUTIVO A4 EM 2 PÁGINAS (AMIGÁVEL PARA OBRA/PEDREIRO)  -->
+  <!-- ========================================================================= -->
+  <div id="memorialPrintArea" class="text-slate-900 font-sans">
+    
+    <!-- ==================== PÁGINA 1: MEMORIAL + GUIA DE OBRA ==================== -->
+    <div>
+      <!-- Cabeçalho Página 1 -->
+      <div class="border-b-4 border-emerald-700 pb-3 mb-4 flex justify-between items-end bg-slate-50 p-3 rounded-t-lg">
+        <div>
+          <span class="text-[10px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">
+            Folha 01/02 • Memorial Técnico & Guia de Instalação na Obra
+          </span>
+          <h1 class="text-xl font-black text-slate-900 mt-1">EcoDesign Interiores e Paisagismo</h1>
+          <p class="text-xs text-slate-600">Responsável Técnico: Adriano Sanches Pastre • Norma: ABNT NBR ISO/CIE 8995-1:2013</p>
+        </div>
+        <div class="text-right text-xs">
+          <div class="text-sm font-bold text-slate-900" id="prtProjeto">Estudo Luminotécnico</div>
+          <div><strong>Emissão:</strong> <span id="prtData">--/--/----</span></div>
+          <div class="text-[10px] text-orange-700 font-bold mt-0.5">BaseArq® CAD Engine V3.2</div>
+        </div>
+      </div>
+
+      <!-- Cartões de Resumo Visual Rápido (Para Cliente e Mestre de Obras) -->
+      <div class="grid grid-cols-4 gap-2.5 mb-4 text-center">
+        <div class="border-2 border-slate-300 rounded-lg p-2 bg-slate-50">
+          <span class="text-[10px] uppercase font-bold text-slate-500 block">Área & Pé-Direito</span>
+          <strong id="prtCardArea" class="text-base font-black text-slate-900">-- m²</strong>
+          <span id="prtCardPD" class="text-[10px] text-slate-600 block">Pé-direito: --</span>
+        </div>
+        <div class="border-2 border-orange-300 rounded-lg p-2 bg-orange-50/60">
+          <span class="text-[10px] uppercase font-bold text-orange-800 block">Total a Instalar</span>
+          <strong id="prtCardPecas" class="text-base font-black text-orange-900">0 Luminárias</strong>
+          <span id="prtCardLamp" class="text-[10px] text-orange-800 block">0 lâmpadas no total</span>
+        </div>
+        <div class="border-2 border-sky-300 rounded-lg p-2 bg-sky-50/60">
+          <span class="text-[10px] uppercase font-bold text-sky-800 block">Carga Elétrica Total</span>
+          <strong id="prtCardWatts" class="text-base font-black text-sky-900">0 W</strong>
+          <span id="prtCardAmperes" class="text-[10px] text-sky-800 block">~0.0A (127V) | ~0.0A (220V)</span>
+        </div>
+        <div class="border-2 border-emerald-400 rounded-lg p-2 bg-emerald-50/70">
+          <span class="text-[10px] uppercase font-bold text-emerald-800 block">Iluminância Final</span>
+          <strong id="prtCardLux" class="text-base font-black text-emerald-900">0 lx</strong>
+          <span id="prtCardMeta" class="text-[10px] text-emerald-800 block">Meta ABNT: -- lx</span>
+        </div>
+      </div>
+
+      <!-- Seção 1: Parâmetros Geométricos, Fotométricos e Normativos -->
+      <div class="mb-4">
+        <h2 class="text-xs font-bold uppercase tracking-wider bg-slate-200 px-2.5 py-1.5 border-l-4 border-slate-900 mb-2">
+          1. Parâmetros Geométricos, Fotométricos e Normativos do Recinto (ABNT NBR ISO/CIE 8995-1)
+        </h2>
+        <table class="w-full text-xs border-collapse border border-slate-400">
+          <tbody>
+            <tr class="border-b border-slate-300">
+              <td class="p-1.5 bg-slate-100 font-semibold w-1/4">Ambiente / Tarefa:</td>
+              <td class="p-1.5 w-1/4" id="prtAmbiente">--</td>
+              <td class="p-1.5 bg-slate-100 font-semibold w-1/4">Iluminância Alvo (E):</td>
+              <td class="p-1.5 font-bold w-1/4" id="prtLuxAlvo">-- lx</td>
+            </tr>
+            <tr class="border-b border-slate-300">
+              <td class="p-1.5 bg-slate-100 font-semibold">Formato / Base (C × L):</td>
+              <td class="p-1.5" id="prtDimensoes">--</td>
+              <td class="p-1.5 bg-slate-100 font-semibold">Área Real / Perímetro:</td>
+              <td class="p-1.5" id="prtAreaPD">--</td>
+            </tr>
+            <tr class="border-b border-slate-300">
+              <td class="p-1.5 bg-slate-100 font-semibold">Altura Útil (A) / Fator K:</td>
+              <td class="p-1.5" id="prtAlturaK">--</td>
+              <td class="p-1.5 bg-slate-100 font-semibold">Fator Utiliz. (η) / Manut. (d):</td>
+              <td class="p-1.5" id="prtEtaD">--</td>
+            </tr>
+            <tr>
+              <td class="p-1.5 bg-slate-100 font-semibold">Temperatura de Cor (K):</td>
+              <td class="p-1.5" id="prtKelvin">--</td>
+              <td class="p-1.5 bg-slate-100 font-semibold">Iluminância Real Somada:</td>
+              <td class="p-1.5 font-bold text-emerald-800" id="prtLuxReal">-- lx</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Seção 2: Quadro Quantitativo de Compras e Especificação -->
+      <div class="mb-4">
+        <h2 class="text-xs font-bold uppercase tracking-wider bg-slate-200 px-2.5 py-1.5 border-l-4 border-slate-900 mb-2">
+          2. Lista de Materiais, Circuitos de Iluminação e Especificação de Compras
+        </h2>
+        <table class="w-full text-xs border-collapse border border-slate-400 text-left">
+          <thead>
+            <tr class="bg-slate-100 border-b border-slate-400">
+              <th class="p-1.5 border-r border-slate-300">Circuito / Modelo Comercial</th>
+              <th class="p-1.5 border-r border-slate-300 text-center">Medida / Nicho</th>
+              <th class="p-1.5 border-r border-slate-300 text-center">Facho / Ø Piso</th>
+              <th class="p-1.5 border-r border-slate-300 text-center">Qtd. Peças</th>
+              <th class="p-1.5 border-r border-slate-300 text-center">Total Lâmp.</th>
+              <th class="p-1.5 border-r border-slate-300 text-center">Fluxo / Lux</th>
+              <th class="p-1.5 text-center">Potência</th>
+            </tr>
+          </thead>
+          <tbody id="prtTabelaLuminarias"></tbody>
+        </table>
+      </div>
+
+      <!-- Seção 3: Guia Prático para Obra (Pedreiro, Gesseiro e Eletricista) -->
+      <div class="mb-2">
+        <h2 class="text-xs font-bold uppercase tracking-wider bg-amber-100 text-amber-950 px-2.5 py-1.5 border-l-4 border-amber-600 mb-2">
+          3. Instruções Práticas para Execução na Obra (Gesseiro, Eletricista e Pedreiro)
+        </h2>
+        <div class="grid grid-cols-2 gap-3 text-xs">
+          <div class="border border-slate-300 rounded-lg p-3 bg-slate-50 space-y-1.5">
+            <div class="font-extrabold text-slate-900">📏 Como Marcar os Pontos no Forro (Gesseiro / Pedreiro):</div>
+            <p class="text-[11px] text-slate-700 leading-relaxed">
+              1. Na <strong>Folha 02/02 (Próxima Página)</strong>, cada luminária está numerada como <strong>P1, P2, P3...</strong><br>
+              2. O <strong>Ponto Zero (0,00 m)</strong> fica no <strong>Canto Superior Esquerdo</strong> da planta.<br>
+              3. Estique a trena a partir da <strong>Parede Esquerda (Cota X)</strong> e a partir da <strong>Parede Superior/Fundo (Cota Y)</strong> conforme a tabela da Folha 02 para marcar o centro exato de furação de cada peça.<br>
+              4. Confira o tamanho físico da peça antes de abrir o recorte no gesso.
+            </p>
+          </div>
+          <div class="border border-slate-300 rounded-lg p-3 bg-slate-50 space-y-1.5">
+            <div class="font-extrabold text-slate-900">⚡ Recomendações Elétricas (Eletricista - Base NBR 5410):</div>
+            <p id="prtGuiaEletrica" class="text-[11px] text-slate-700 leading-relaxed">
+              • Dimensionamento elétrico calculado automaticamente conforme a potência total instalada.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== PÁGINA 2: CROQUI EXECUTIVO AMPLIADO (FIT TO PAGE) + TABELA DE TRENA ==================== -->
+    <div class="quebra-pagina-croqui">
+      <div class="border-b-2 border-slate-900 pb-2 mb-3 flex justify-between items-center">
+        <div>
+          <span class="text-[10px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded bg-slate-200 text-slate-900">
+            Folha 02/02 • Prancha Executiva de Forro Ampliada (Fit to Page)
+          </span>
+          <h2 class="text-base font-black text-slate-900 mt-0.5" id="prtTituloFolha2">Planta de Marcação de Forro, Cotas de Eixo e Cones de Luz</h2>
+        </div>
+        <div class="text-right text-[11px] text-slate-600">
+          <div><strong>Referência (0,00m):</strong> Canto Superior Esquerdo</div>
+          <div><strong>EcoDesign Interiores e Paisagismo</strong> • BaseArq® V3.2</div>
+        </div>
+      </div>
+
+      <!-- CROQUI AMPLIADO FIT TO PAGE -->
+      <div class="border-2 border-slate-900 rounded-lg p-2 bg-white flex flex-col items-center justify-center mb-3">
+        <svg id="svgForroPrint" width="760" height="540" viewBox="0 0 760 540" class="w-full h-auto max-h-[155mm]"></svg>
+        <p id="prtLegendaForro" class="text-[10px] text-slate-700 font-mono mt-1 text-center font-semibold"></p>
+      </div>
+
+      <!-- TABELA DE LOCAÇÃO NA TRENA (PARA O PEDREIRO / GESSEIRO NÃO TER DÚVIDA) -->
+      <div>
+        <h3 class="text-xs font-bold uppercase tracking-wider bg-emerald-100 text-emerald-950 px-2.5 py-1 border-l-4 border-emerald-700 mb-1.5">
+          4. Gabarito de Marcação na Trena (Coordenadas Exatas Ponto a Ponto no Teto)
+        </h3>
+        <table class="w-full text-[11px] border-collapse border border-slate-400 text-left">
+          <thead>
+            <tr class="bg-slate-100 border-b border-slate-400">
+              <th class="p-1 border-r border-slate-300 text-center w-14">Ponto</th>
+              <th class="p-1 border-r border-slate-300">Circuito / Luminária</th>
+              <th class="p-1 border-r border-slate-300 text-center">Dist. Parede Esquerda (Eixo X)</th>
+              <th class="p-1 border-r border-slate-300 text-center">Dist. Parede Superior (Eixo Y)</th>
+              <th class="p-1 border-r border-slate-300 text-center">Dist. Ponto Vizinho</th>
+              <th class="p-1 text-center">Sentido Peça</th>
+            </tr>
+          </thead>
+          <tbody id="prtTabelaCoordenadasObra"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const CATALOGO_AMBIENTES = {
+      residencial: [
+        { grupo: "Área Social e Lazer", id: "res_sala_estar",  nome: "Sala de Estar / TV (Geral)",          int: 150, max: 200, tempPadrao: 2700, tempMin: 2200, tempMax: 3000, foco: "relaxamento", irc: "IRC ≥80 | UGR ≤22" },
+        { grupo: "Área Social e Lazer", id: "res_sala_jantar", nome: "Sala de Jantar / Mesa Principal",     int: 200, max: 300, tempPadrao: 2700, tempMin: 2200, tempMax: 3000, foco: "relaxamento", irc: "IRC ≥80 | UGR ≤22" },
+        { grupo: "Área Íntima e Estudo", id: "res_dorm_geral", nome: "Dormitório Casal/Solteiro (Geral)",   int: 100, max: 150, tempPadrao: 2700, tempMin: 2200, tempMax: 3000, foco: "relaxamento", irc: "IRC ≥80 | UGR ≤19" },
+        { grupo: "Área Íntima e Estudo", id: "res_home_office",nome: "Home Office / Bancada de Estudos",    int: 500, max: 750, tempPadrao: 4000, tempMin: 3000, tempMax: 5000, foco: "trabalho",    irc: "IRC ≥80 | UGR ≤19" },
+        { grupo: "Cozinha, Banho e Serviço", id: "res_coz_geral", nome: "Cozinha (Iluminação Geral)",       int: 200, max: 300, tempPadrao: 3000, tempMin: 3000, tempMax: 4000, foco: "misto",       irc: "IRC ≥80 | UGR ≤22" },
+        { grupo: "Cozinha, Banho e Serviço", id: "res_coz_banc",  nome: "Cozinha (Bancada de Preparo)",     int: 500, max: 750, tempPadrao: 4000, tempMin: 3000, tempMax: 5000, foco: "trabalho",    irc: "IRC ≥85 | UGR ≤19" },
+        { grupo: "Cozinha, Banho e Serviço", id: "res_banho_ger", nome: "Banheiro / Lavabo (Geral)",        int: 150, max: 200, tempPadrao: 3000, tempMin: 2700, tempMax: 4000, foco: "misto",       irc: "IRC ≥80 | UGR ≤22" },
+        { grupo: "Cozinha, Banho e Serviço", id: "res_banho_esp", nome: "Banheiro / Penteadeira (Maquiagem)", int: 300, max: 500, tempPadrao: 4000, tempMin: 3000, tempMax: 4500, foco: "trabalho",  irc: "IRC ≥90 | UGR ≤19" }
+      ],
+      comercial: [
+        { grupo: "🎓 Educacional (NBR ISO/CIE 8995-1)", id: "edu_sala_noturna", nome: "Sala de Aula Noturna / Educação Adultos (500 lx)", int: 500, max: 750, tempPadrao: 4000, tempMin: 3500, tempMax: 5000, foco: "trabalho", irc: "IRC ≥80 | UGR ≤19" },
+        { grupo: "🎓 Educacional (NBR ISO/CIE 8995-1)", id: "edu_sala_diurna",  nome: "Sala de Aula Padrão / Diurna / NBR 5413 (300 lx)", int: 300, max: 500, tempPadrao: 4000, tempMin: 3500, tempMax: 5000, foco: "trabalho", irc: "IRC ≥80 | UGR ≤19" },
+        { grupo: "🎓 Educacional (NBR ISO/CIE 8995-1)", id: "edu_atelie",       nome: "Ateliê de Design / Sala de Desenho (750 lx)",      int: 750, max: 1000, tempPadrao: 4000, tempMin: 4000, tempMax: 5000, foco: "trabalho", irc: "IRC ≥90 | UGR ≤16" },
+        { grupo: "🏢 Escritórios e Varejo", id: "com_escritorio",               nome: "Escritório Corporativo / Coworking (500 lx)",      int: 500, max: 750, tempPadrao: 4000, tempMin: 3500, tempMax: 5000, foco: "trabalho", irc: "IRC ≥80 | UGR ≤19" },
+        { grupo: "🏢 Escritórios e Varejo", id: "com_loja_geral",               nome: "Loja / Ponto de Venda PDV (300 lx)",               int: 300, max: 500, tempPadrao: 3500, tempMin: 3000, tempMax: 4000, foco: "misto",    irc: "IRC ≥85 | UGR ≤22" },
+        { grupo: "🏢 Escritórios e Varejo", id: "com_restaurante",              nome: "Restaurante / Bistrô (Salão Mesas - 150 lx)",      int: 150, max: 200, tempPadrao: 2700, tempMin: 2200, tempMax: 3000, foco: "relaxamento", irc: "IRC ≥85 | UGR ≤22" }
+      ],
+      externo: [
+        { grupo: "Paisagismo e Áreas Externas", id: "ext_jardim",  nome: "Jardim / Destaque de Vegetação", int: 100, max: 200, tempPadrao: 3000, tempMin: 2700, tempMax: 3500, foco: "paisagismo",  irc: "IRC ≥85 | IP65/IP67" },
+        { grupo: "Paisagismo e Áreas Externas", id: "ext_caminho", nome: "Caminhos / Deck / Passarela",    int: 50,  max: 100, tempPadrao: 2700, tempMin: 2200, tempMax: 3000, foco: "relaxamento", irc: "IRC ≥80 | IP65/IP67" }
+      ]
+    };
+
+    // CATÁLOGO DE CENÁRIO CONTEXTUAL POR CÔMODO (COM ALTURA FÍSICA 'h' PARA PROJEÇÃO DE SOMBRA!)
+    const CENARIO_POR_AMBIENTE = {
+      res_sala_estar: [
+        { icone: "🛋️", nome: "Sofá 3 Lugares",   comp: 2.30, larg: 0.95, h: 0.85, forma: "ret" },
+        { icone: "📺", nome: "Rack / Painel TV", comp: 2.20, larg: 0.45, h: 1.80, forma: "ret" },
+        { icone: "🪑", nome: "Poltrona Leitura", comp: 0.85, larg: 0.85, h: 0.90, forma: "ret" },
+        { icone: "☕", nome: "Mesa de Centro",   comp: 1.10, larg: 0.65, h: 0.40, forma: "oval" },
+        { icone: "🖼️", nome: "Quadro / Arte",    comp: 1.20, larg: 0.15, h: 1.60, forma: "ret" }
+      ],
+      res_sala_jantar: [
+        { icone: "🍽️", nome: "Mesa Jantar Oval", comp: 2.10, larg: 1.15, h: 0.78, forma: "oval" },
+        { icone: "🍽️", nome: "Mesa Jantar Ret.", comp: 2.00, larg: 1.00, h: 0.78, forma: "ret" },
+        { icone: "🗄️", nome: "Buffet / Aparador",comp: 1.80, larg: 0.50, h: 0.85, forma: "ret" },
+        { icone: "🍷", nome: "Cristaleira Alta", comp: 0.90, larg: 0.45, h: 2.10, forma: "ret" },
+        { icone: "🖼️", nome: "Quadro / Espelho", comp: 1.40, larg: 0.15, h: 1.60, forma: "ret" }
+      ],
+      res_dorm_geral: [
+        { icone: "🛏️", nome: "Cama Casal Queen", comp: 1.98, larg: 1.58, h: 0.65, forma: "ret" },
+        { icone: "🚪", nome: "Guarda-Roupa Alto",comp: 2.40, larg: 0.60, h: 2.30, forma: "ret" },
+        { icone: "🛏️", nome: "Mesa Cabeceira",   comp: 0.55, larg: 0.45, h: 0.60, forma: "ret" },
+        { icone: "💄", nome: "Penteadeira/Estudo",comp: 1.20, larg: 0.50, h: 0.78, forma: "ret" },
+        { icone: "📺", nome: "Painel TV Quarto", comp: 1.60, larg: 0.30, h: 1.50, forma: "ret" }
+      ],
+      res_home_office: [
+        { icone: "💻", nome: "Bancada Trabalho", comp: 1.80, larg: 0.65, h: 0.78, forma: "ret" },
+        { icone: "📚", nome: "Estante Livros Alta",comp: 1.60, larg: 0.40, h: 2.15, forma: "ret" },
+        { icone: "🪑", nome: "Poltrona Reunião", comp: 0.80, larg: 0.80, h: 0.95, forma: "oval" },
+        { icone: "🗄️", nome: "Gaveteiro / Apoio",comp: 0.60, larg: 0.50, h: 0.75, forma: "ret" }
+      ],
+      res_coz_geral: [
+        { icone: "🔪", nome: "Ilha / Bancada Pia",comp: 2.40, larg: 0.65, h: 0.90, forma: "ret" },
+        { icone: "🧊", nome: "Geladeira Duplex", comp: 0.80, larg: 0.75, h: 1.90, forma: "ret" },
+        { icone: "🍳", nome: "Fogão / Cooktop",  comp: 0.75, larg: 0.65, h: 0.90, forma: "ret" },
+        { icone: "🗄️", nome: "Armário Aéreo Alto",comp: 1.80, larg: 0.40, h: 2.20, forma: "ret" },
+        { icone: "🍽️", nome: "Mesa Copa Rápida", comp: 1.20, larg: 0.80, h: 0.78, forma: "oval" }
+      ],
+      res_banho_ger: [
+        { icone: "🚰", nome: "Bancada Cuba/Esp.",comp: 1.20, larg: 0.55, h: 0.88, forma: "ret" },
+        { icone: "🚿", nome: "Box Chuveiro",     comp: 1.20, larg: 0.90, h: 2.00, forma: "ret" },
+        { icone: "🚽", nome: "Bacia Sanitária",  comp: 0.50, larg: 0.70, h: 0.75, forma: "oval" },
+        { icone: "🛁", nome: "Banheira Imersão", comp: 1.70, larg: 0.80, h: 0.65, forma: "oval" }
+      ],
+      edu_sala_noturna: [
+        { icone: "👨‍🏫", nome: "Mesa Professor",   comp: 1.50, larg: 0.70, h: 0.78, forma: "ret" },
+        { icone: "📝", nome: "Bloco Carteiras",  comp: 2.40, larg: 1.60, h: 0.75, forma: "ret" },
+        { icone: "📋", nome: "Lousa / Quadro",   comp: 3.00, larg: 0.20, h: 1.80, forma: "ret" },
+        { icone: "📚", nome: "Armário Didático", comp: 1.60, larg: 0.50, h: 2.10, forma: "ret" }
+      ],
+      com_escritorio: [
+        { icone: "💼", nome: "Ilha Workstations",comp: 2.80, larg: 1.40, h: 0.75, forma: "ret" },
+        { icone: "🤝", nome: "Mesa Reunião",     comp: 2.60, larg: 1.20, h: 0.78, forma: "oval" },
+        { icone: "🗄️", nome: "Armário Arquivos", comp: 2.00, larg: 0.50, h: 2.10, forma: "ret" },
+        { icone: "☕", nome: "Copa / Café",      comp: 1.40, larg: 0.60, h: 0.90, forma: "ret" }
+      ],
+      ext_jardim: [
+        { icone: "🌳", nome: "Árvore / Palmeira",comp: 1.60, larg: 1.60, h: 2.30, forma: "oval" },
+        { icone: "🌿", nome: "Canteiro Arbustos",comp: 2.20, larg: 0.80, h: 1.10, forma: "ret" },
+        { icone: "🪑", nome: "Banco de Jardim",  comp: 1.60, larg: 0.60, h: 0.80, forma: "ret" },
+        { icone: "🪵", nome: "Pergolado Madeira",comp: 3.00, larg: 2.50, h: 2.40, forma: "ret" }
+      ]
+    };
+
+    const CORES_CIRCUITOS = ["#f97316", "#38bdf8", "#34d399", "#e879f9", "#facc15", "#fb7185"];
+
+    let setorAtual = 'residencial';
+    let formatoGeometricoPreset = 'spot';
+    let mostrarMapaCalor = true;
+    let mostrarCotasVisuais = true;
+    let mostrarSombras = true;
+    let modoArraste = 'individual';
+
+    let verticesSala = [];
+    let circuitosAtivos = [];
+    let luminariasPlanta = [];
+    let cenarioPlanta = [];
+
+    let itemSelecionado = null;
+    let arrastando = null;
+    let transformView = { offsetX: 60, offsetY: 50, scale: 40, C: 4.5, L: 9.4 };
+
+    function lerNum(id, padrao = 0) {
+      const el = document.getElementById(id);
+      if (!el || el.value === "" || el.value === null) return padrao;
+      const v = parseFloat(String(el.value).replace(',', '.'));
+      return isNaN(v) ? padrao : v;
+    }
+
+    function abrirTutorial() { document.getElementById('modalTutorial').classList.remove('hidden'); }
+    function fecharTutorial() { document.getElementById('modalTutorial').classList.add('hidden'); }
+
+    // =========================================================================
+    // BARRA DINÂMICA DE CENÁRIO CONFORME O CÔMODO SELECIONADO
+    // =========================================================================
+    function obterListaCenarioContextual() {
+      const ambId = document.getElementById('ambiente').value;
+      if (CENARIO_POR_AMBIENTE[ambId]) return CENARIO_POR_AMBIENTE[ambId];
+      if (ambId === 'res_coz_banc') return CENARIO_POR_AMBIENTE.res_coz_geral;
+      if (ambId === 'res_banho_esp') return CENARIO_POR_AMBIENTE.res_banho_ger;
+      if (setorAtual === 'comercial') return CENARIO_POR_AMBIENTE.com_escritorio;
+      if (setorAtual === 'externo') return CENARIO_POR_AMBIENTE.ext_jardim;
+      return CENARIO_POR_AMBIENTE.res_sala_jantar;
+    }
+
+    function renderizarBotoesCenarioContextual() {
+      const barra = document.getElementById('barraBotoesCenario');
+      const itens = obterListaCenarioContextual();
+      barra.innerHTML = '';
+
+      itens.forEach((item, idx) => {
+        const btn = document.createElement('button');
+        btn.type = "button";
+        btn.className = "px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 transition flex items-center gap-1 shadow-sm";
+        btn.title = `Inserir ${item.nome} (${item.comp}×${item.larg}m | Altura: ${item.h}m p/ projeção de sombra)`;
+        btn.innerHTML = `<span>+ ${item.icone} ${item.nome}</span> <span class="text-[9px] text-slate-400">(h=${item.h}m)</span>`;
+        btn.onclick = () => inserirItemCenarioContextual(idx);
+        barra.appendChild(btn);
+      });
+    }
+
+    function inserirItemCenarioContextual(idx) {
+      let C = lerNum('comp', 4.50);
+      let L = lerNum('larg', 9.40);
+      if (!lerNum('comp')) {
+        document.getElementById('comp').value = C;
+        document.getElementById('larg').value = L;
+        reescalarGeometriaPorInputs();
+      }
+      const itens = obterListaCenarioContextual();
+      const m = itens[idx] || itens[0];
+      const novo = {
+        id: 'mob_' + Date.now() + '_' + Math.floor(Math.random() * 100),
+        nome: m.nome, comp: m.comp, larg: m.larg, h: m.h || 0.80, forma: m.forma,
+        x: +(C / 2).toFixed(2),
+        y: +(L / 2).toFixed(2),
+        rot: false
+      };
+      cenarioPlanta.push(novo);
+      itemSelecionado = { tipo: 'cenario', id: novo.id };
+      atualizarTudo();
+    }
+
+    // =========================================================================
+    // 1. GEOMETRIA DO RECINTO (POLÍGONOS, "L", TRAPÉZIO, CÍRCULO, GAUSS)
+    // =========================================================================
+    function construirPoligonoPadrao(formato, C, L) {
+      if (C <= 0 || L <= 0) return [];
+      if (formato === 'retangulo') {
+        return [{x:0, y:0}, {x:C, y:0}, {x:C, y:L}, {x:0, y:L}];
+      } else if (formato === 'ele') {
+        return [
+          {x: 0, y: 0},
+          {x: C, y: 0},
+          {x: C, y: +(L * 0.42).toFixed(2)},
+          {x: +(C * 0.66).toFixed(2), y: +(L * 0.42).toFixed(2)},
+          {x: +(C * 0.66).toFixed(2), y: L},
+          {x: 0, y: L}
+        ];
+      } else if (formato === 'trapezio') {
+        return [
+          {x: +(C * 0.18).toFixed(2), y: 0},
+          {x: +(C * 0.82).toFixed(2), y: 0},
+          {x: C, y: L},
+          {x: 0, y: L}
+        ];
+      } else if (formato === 'triangulo') {
+        return [
+          {x: +(C * 0.5).toFixed(2), y: 0},
+          {x: C, y: L},
+          {x: 0, y: L}
+        ];
+      } else {
+        return [{x:0, y:0}, {x:C, y:0}, {x:C, y:L}, {x:0, y:L}];
+      }
+    }
+
+    function mudarFormatoSala() {
+      const C = lerNum('comp', 4.50);
+      const L = lerNum('larg', 9.40);
+      const form = document.getElementById('formatoSalaSelect').value;
+      verticesSala = construirPoligonoPadrao(form, C, L);
+      atualizarTudo();
+    }
+
+    function reescalarGeometriaPorInputs() {
+      const C = lerNum('comp', 0);
+      const L = lerNum('larg', 0);
+      if (!(C > 0 && L > 0)) {
+        verticesSala = [];
+        atualizarTudo();
+        return;
+      }
+      const form = document.getElementById('formatoSalaSelect').value;
+      verticesSala = construirPoligonoPadrao(form, C, L);
+      atualizarTudo();
+    }
+
+    function adicionarVerticePoligono() {
+      if (verticesSala.length < 3) {
+        const C = lerNum('comp', 4.50);
+        const L = lerNum('larg', 9.40);
+        if (!lerNum('comp')) document.getElementById('comp').value = C;
+        if (!lerNum('larg')) document.getElementById('larg').value = L;
+        verticesSala = construirPoligonoPadrao('retangulo', C, L);
+      }
+      const formSel = document.getElementById('formatoSalaSelect');
+      if (formSel.value === 'elipse' || formSel.value === 'retangulo') formSel.value = 'poligono';
+
+      let maiorIdx = 0, maiorDist = 0;
+      for (let i = 0; i < verticesSala.length; i++) {
+        const p1 = verticesSala[i];
+        const p2 = verticesSala[(i + 1) % verticesSala.length];
+        const d = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+        if (d > maiorDist) { maiorDist = d; maiorIdx = i; }
+      }
+      const a = verticesSala[maiorIdx];
+      const b = verticesSala[(maiorIdx + 1) % verticesSala.length];
+      verticesSala.splice(maiorIdx + 1, 0, {
+        x: +((a.x + b.x) / 2).toFixed(2),
+        y: +((a.y + b.y) / 2).toFixed(2)
+      });
+      atualizarTudo();
+    }
+
+    function calcularAreaEPerimetroSala() {
+      const C = lerNum('comp', 0);
+      const L = lerNum('larg', 0);
+      const form = document.getElementById('formatoSalaSelect').value;
+      if (C <= 0 || L <= 0) return { area: 0, perimetro: 0 };
+
+      if (form === 'elipse') {
+        const a = C / 2, b = L / 2;
+        const area = Math.PI * a * b;
+        const perimetro = Math.PI * (3 * (a + b) - Math.sqrt((3 * a + b) * (a + 3 * b)));
+        return { area, perimetro };
+      }
+
+      if (verticesSala.length < 3) verticesSala = construirPoligonoPadrao(form, C, L);
+      let soma = 0, perim = 0;
+      for (let i = 0; i < verticesSala.length; i++) {
+        const p1 = verticesSala[i];
+        const p2 = verticesSala[(i + 1) % verticesSala.length];
+        soma += (p1.x * p2.y) - (p2.x * p1.y);
+        perim += Math.hypot(p2.x - p1.x, p2.y - p1.y);
+      }
+      return { area: Math.abs(soma) / 2, perimetro: perim };
+    }
+
+    function pontoDentroDaSala(x, y) {
+      const C = lerNum('comp', 1);
+      const L = lerNum('larg', 1);
+      const form = document.getElementById('formatoSalaSelect').value;
+
+      if (form === 'elipse') {
+        const cx = C / 2, cy = L / 2;
+        const rx = Math.max(0.2, C / 2 - 0.15), ry = Math.max(0.2, L / 2 - 0.15);
+        return (((x - cx) ** 2) / (rx ** 2) + ((y - cy) ** 2) / (ry ** 2)) <= 1.0;
+      }
+
+      if (verticesSala.length < 3) return true;
+      let dentro = false;
+      for (let i = 0, j = verticesSala.length - 1; i < verticesSala.length; j = i++) {
+        const xi = verticesSala[i].x, yi = verticesSala[i].y;
+        const xj = verticesSala[j].x, yj = verticesSala[j].y;
+        const intersect = ((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / ((yj - yi) || 0.00001) + xi);
+        if (intersect) dentro = !dentro;
+      }
+      return dentro;
+    }
+
+    // =========================================================================
+    // 2. INSERÇÃO DE MÚLTIPLOS CIRCUITOS / LUMINÁRIAS
+    // =========================================================================
+    function atualizarLuminariaPorPreset() {
+      const val = document.getElementById('presetLuz').value;
+      const selectEl = document.getElementById('presetLuz');
+      const textoOpcao = selectEl.options[selectEl.selectedIndex]?.text || "";
+      if (!val) return;
+
+      const [lm, w, qtdL, formato, dimC, dimL, angulo] = val.split('|');
+      formatoGeometricoPreset = formato || 'spot';
+      document.getElementById('lumens').value = lm;
+      document.getElementById('watts').value = w;
+      document.getElementById('qtdLampPorPonto').value = qtdL;
+      document.getElementById('dimCompPeca').value = parseFloat(dimC).toFixed(2);
+      document.getElementById('dimLargPeca').value = parseFloat(dimL).toFixed(2);
+      document.getElementById('anguloFacho').value = angulo || 36;
+      document.getElementById('nomeComercialLum').value = textoOpcao.split('(')[0].trim();
+    }
+
+    function inserirCircuitoNoAmbiente(modoDistribuicao) {
+      let C = lerNum('comp', 0);
+      let L = lerNum('larg', 0);
+      let A = lerNum('alturaUtilInput', 0);
+      let E = lerNum('luxInput', 0);
+
+      if (!(C > 0 && L > 0)) {
+        C = 4.50; L = 9.40;
+        document.getElementById('comp').value = C;
+        document.getElementById('larg').value = L;
+        reescalarGeometriaPorInputs();
+      }
+      if (!(A > 0)) { A = 1.90; document.getElementById('alturaUtilInput').value = A; }
+      if (!(E > 0)) { E = 200; document.getElementById('luxInput').value = E; }
+
+      const qtdLamp = Math.max(1, Math.round(lerNum('qtdLampPorPonto', 1)));
+      const lmUnit = Math.max(10, lerNum('lumens', 525));
+      const wattsUnit = Math.max(1, lerNum('watts', 7));
+      const angulo = Math.max(10, Math.min(160, lerNum('anguloFacho', 36)));
+      const compPeca = Math.max(0.04, lerNum('dimCompPeca', 0.12));
+      const largPeca = Math.max(0.04, lerNum('dimLargPeca', 0.12));
+      const nomeCom = document.getElementById('nomeComercialLum').value.trim() || `Circuito ${circuitosAtivos.length + 1} (${qtdLamp}x ${lmUnit}lm)`;
+      const linkCom = document.getElementById('linkComercialLum').value.trim();
+
+      const { area, perimetro } = calcularAreaEPerimetroSala();
+      const K = (area > 0 && perimetro > 0) ? ((2 * area) / (perimetro * A)) : 1.2;
+      const eta = obterEtaAtual(K);
+      const d = lerNum('fatorD', 0.80);
+      const phiPeca = qtdLamp * lmUnit;
+
+      const circuitoId = 'circ_' + Date.now() + '_' + Math.floor(Math.random() * 100);
+      const corCircuito = CORES_CIRCUITOS[circuitosAtivos.length % CORES_CIRCUITOS.length];
+
+      circuitosAtivos.push({
+        id: circuitoId, nome: nomeCom, link: linkCom, cor: corCircuito,
+        formato: formatoGeometricoPreset, qtdLamp, lmUnit, wattsUnit, angulo, comp: compPeca, larg: largPeca
+      });
+
+      if (modoDistribuicao === 'malha_auto') {
+        const fluxoJaExistente = calcularFluxoTotalAtivo();
+        const fluxoMetaTotal = (area * E) / (eta * d);
+        const fluxoFaltante = Math.max(phiPeca, fluxoMetaTotal - fluxoJaExistente);
+        const nAlvo = Math.max(1, Math.round(fluxoFaltante / phiPeca));
+
+        const ratio = C / L;
+        let cols = Math.max(1, Math.round(Math.sqrt(nAlvo * ratio)));
+        let rows = Math.max(1, Math.round(nAlvo / cols));
+
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const px = +(((c + 0.5) / cols) * C).toFixed(2);
+            const py = +(((r + 0.5) / rows) * L).toFixed(2);
+            if (pontoDentroDaSala(px, py)) {
+              luminariasPlanta.push({
+                id: 'lum_' + Date.now() + '_' + Math.random(),
+                circuitoId, x: px, y: py, rot: false
+              });
+            }
+          }
+        }
+      } else if (modoDistribuicao === 'bordas') {
+        const qtdPorLado = Math.max(2, Math.min(8, Math.round(L / 1.35)));
+        const recuoParede = Math.min(0.55, C * 0.15);
+        for (let i = 0; i < qtdPorLado; i++) {
+          const py = +(((i + 0.5) / qtdPorLado) * L).toFixed(2);
+          const xEsq = +(recuoParede).toFixed(2);
+          const xDir = +(C - recuoParede).toFixed(2);
+          if (pontoDentroDaSala(xEsq, py)) {
+            luminariasPlanta.push({ id: 'lum_' + Date.now() + '_L' + i, circuitoId, x: xEsq, y: py, rot: true });
+          }
+          if (pontoDentroDaSala(xDir, py)) {
+            luminariasPlanta.push({ id: 'lum_' + Date.now() + '_R' + i, circuitoId, x: xDir, y: py, rot: true });
+          }
+        }
+      } else {
+        const qtdAvulsa = Math.max(1, Math.min(40, Math.round(lerNum('qtdAvulsaInput', 1))));
+        for (let i = 0; i < qtdAvulsa; i++) {
+          const offset = (i - (qtdAvulsa - 1) / 2) * Math.max(0.45, compPeca * 1.4);
+          const px = Math.max(0.3, Math.min(C - 0.3, +(C / 2 + offset).toFixed(2)));
+          const py = +(L / 2).toFixed(2);
+          luminariasPlanta.push({
+            id: 'lum_' + Date.now() + '_A' + i,
+            circuitoId, x: px, y: py, rot: false
+          });
+        }
+      }
+
+      const ultima = luminariasPlanta[luminariasPlanta.length - 1];
+      if (ultima) itemSelecionado = { tipo: 'luminaria', id: ultima.id, circuitoId };
+      atualizarTudo();
+    }
+
+    // =========================================================================
+    // 3. INTERAÇÃO DE SELEÇÃO, ROTAÇÃO, EXCLUSÃO E DRAG-AND-DROP
+    // =========================================================================
+    function alternarMapaCalor() {
+      mostrarMapaCalor = !mostrarMapaCalor;
+      const btn = document.getElementById('btnToggleHeatmap');
+      btn.className = mostrarMapaCalor
+        ? "px-2.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 shadow transition flex items-center gap-1"
+        : "px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-400 border border-slate-700 transition flex items-center gap-1";
+      btn.innerText = mostrarMapaCalor ? "🔥 Mapa de Calor: ON" : "🔥 Mapa de Calor: OFF";
+      atualizarTudo();
+    }
+
+    function alternarCotasVisuais() {
+      mostrarCotasVisuais = !mostrarCotasVisuais;
+      const btn = document.getElementById('btnToggleCotas');
+      btn.className = mostrarCotasVisuais
+        ? "px-2.5 py-1.5 rounded-lg text-xs font-bold bg-sky-500/20 text-sky-300 border border-sky-500/40 transition flex items-center gap-1"
+        : "px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-400 border border-slate-700 transition flex items-center gap-1";
+      btn.innerText = mostrarCotasVisuais ? "📏 Cotas & Eixos: ON" : "📏 Cotas & Eixos: OFF";
+      atualizarTudo();
+    }
+
+    function alternarSombrasCenario() {
+      mostrarSombras = !mostrarSombras;
+      const btn = document.getElementById('btnToggleSombras');
+      btn.className = mostrarSombras
+        ? "px-2.5 py-1.5 rounded-lg text-xs font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40 transition flex items-center gap-1"
+        : "px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-400 border border-slate-700 transition flex items-center gap-1";
+      btn.innerText = mostrarSombras ? "🌗 Sombras: ON" : "🌗 Sombras: OFF";
+      atualizarTudo();
+    }
+
+    function definirModoArraste(modo) {
+      modoArraste = modo;
+      document.getElementById('btnArrasteIndiv').className = (modo === 'individual')
+        ? "px-2 py-1 rounded text-[11px] font-bold bg-orange-500 text-slate-950 transition"
+        : "px-2 py-1 rounded text-[11px] font-bold text-slate-300 hover:bg-slate-800 transition";
+      document.getElementById('btnArrasteGrupo').className = (modo === 'grupo')
+        ? "px-2 py-1 rounded text-[11px] font-bold bg-sky-400 text-slate-950 transition"
+        : "px-2 py-1 rounded text-[11px] font-bold text-slate-300 hover:bg-slate-800 transition";
+    }
+
+    function girarItemSelecionado() {
+      if (!itemSelecionado) return;
+      if (itemSelecionado.tipo === 'luminaria') {
+        if (modoArraste === 'grupo') {
+          luminariasPlanta.filter(l => l.circuitoId === itemSelecionado.circuitoId).forEach(l => l.rot = !l.rot);
+        } else {
+          const lum = luminariasPlanta.find(l => l.id === itemSelecionado.id);
+          if (lum) lum.rot = !lum.rot;
+        }
+      } else if (itemSelecionado.tipo === 'cenario') {
+        const mob = cenarioPlanta.find(m => m.id === itemSelecionado.id);
+        if (mob) mob.rot = !mob.rot;
+      }
+      atualizarTudo();
+    }
+
+    function duplicarItemSelecionado() {
+      if (!itemSelecionado) return;
+      if (itemSelecionado.tipo === 'luminaria') {
+        const lum = luminariasPlanta.find(l => l.id === itemSelecionado.id);
+        if (lum) {
+          const nova = { ...lum, id: 'lum_' + Date.now(), x: +(lum.x + 0.4).toFixed(2), y: +(lum.y + 0.4).toFixed(2) };
+          luminariasPlanta.push(nova);
+          itemSelecionado = { tipo: 'luminaria', id: nova.id, circuitoId: nova.circuitoId };
+        }
+      } else if (itemSelecionado.tipo === 'cenario') {
+        const mob = cenarioPlanta.find(m => m.id === itemSelecionado.id);
+        if (mob) {
+          const novo = { ...mob, id: 'mob_' + Date.now(), x: +(mob.x + 0.5).toFixed(2), y: +(mob.y + 0.5).toFixed(2) };
+          cenarioPlanta.push(novo);
+          itemSelecionado = { tipo: 'cenario', id: novo.id };
+        }
+      }
+      atualizarTudo();
+    }
+
+    function excluirItemSelecionado() {
+      if (!itemSelecionado) return;
+      if (itemSelecionado.tipo === 'luminaria') {
+        luminariasPlanta = luminariasPlanta.filter(l => l.id !== itemSelecionado.id);
+        limparCircuitosVazios();
+      } else if (itemSelecionado.tipo === 'cenario') {
+        cenarioPlanta = cenarioPlanta.filter(m => m.id !== itemSelecionado.id);
+      } else if (itemSelecionado.tipo === 'vertice' && verticesSala.length > 3) {
+        verticesSala.splice(itemSelecionado.idx, 1);
+      }
+      itemSelecionado = null;
+      atualizarTudo();
+    }
+
+    function excluirCircuitoInteiro(circId) {
+      luminariasPlanta = luminariasPlanta.filter(l => l.circuitoId !== circId);
+      circuitosAtivos = circuitosAtivos.filter(c => c.id !== circId);
+      if (itemSelecionado && itemSelecionado.circuitoId === circId) itemSelecionado = null;
+      atualizarTudo();
+    }
+
+    function girarCircuitoInteiro(circId) {
+      luminariasPlanta.filter(l => l.circuitoId === circId).forEach(l => l.rot = !l.rot);
+      atualizarTudo();
+    }
+
+    function limparCircuitosVazios() {
+      circuitosAtivos = circuitosAtivos.filter(c => luminariasPlanta.some(l => l.circuitoId === c.id));
+    }
+
+    function obterCoordenadaMetrosNoSVG(evt) {
+      const svg = document.getElementById('svgForro');
+      const pt = svg.createSVGPoint();
+      pt.x = evt.clientX;
+      pt.y = evt.clientY;
+      const ctm = svg.getScreenCTM();
+      if (!ctm) return { x: 0, y: 0 };
+      const cursor = pt.matrixTransform(ctm.inverse());
+      const xm = (cursor.x - transformView.offsetX) / transformView.scale;
+      const ym = (cursor.y - transformView.offsetY) / transformView.scale;
+      return { x: xm, y: ym };
+    }
+
+    function iniciarArrasteSVG(evt, tipo, idOuIdx, circuitoId = null) {
+      evt.stopPropagation();
+      const posM = obterCoordenadaMetrosNoSVG(evt);
+
+      if (tipo === 'luminaria') {
+        itemSelecionado = { tipo: 'luminaria', id: idOuIdx, circuitoId };
+        const pecasParaMover = (modoArraste === 'grupo')
+          ? luminariasPlanta.filter(l => l.circuitoId === circuitoId)
+          : luminariasPlanta.filter(l => l.id === idOuIdx);
+
+        arrastando = {
+          tipo: 'luminaria',
+          startX: posM.x,
+          startY: posM.y,
+          posicoesIniciais: pecasParaMover.map(p => ({ obj: p, x0: p.x, y0: p.y }))
+        };
+      } else if (tipo === 'cenario') {
+        const mob = cenarioPlanta.find(m => m.id === idOuIdx);
+        itemSelecionado = { tipo: 'cenario', id: idOuIdx };
+        if (mob) arrastando = { tipo: 'cenario', obj: mob, startX: posM.x, startY: posM.y, x0: mob.x, y0: mob.y };
+      } else if (tipo === 'vertice') {
+        itemSelecionado = { tipo: 'vertice', idx: idOuIdx };
+        arrastando = { tipo: 'vertice', idx: idOuIdx };
+      }
+      atualizarTudo();
+    }
+
+    window.addEventListener('pointermove', (evt) => {
+      if (!arrastando) return;
+      const posM = obterCoordenadaMetrosNoSVG(evt);
+      const C = transformView.C;
+      const L = transformView.L;
+
+      if (arrastando.tipo === 'luminaria') {
+        const dx = posM.x - arrastando.startX;
+        const dy = posM.y - arrastando.startY;
+        arrastando.posicoesIniciais.forEach(item => {
+          item.obj.x = Math.max(0.05, Math.min(C - 0.05, +(item.x0 + dx).toFixed(2)));
+          item.obj.y = Math.max(0.05, Math.min(L - 0.05, +(item.y0 + dy).toFixed(2)));
+        });
+        atualizarTudo();
+      } else if (arrastando.tipo === 'cenario') {
+        const dx = posM.x - arrastando.startX;
+        const dy = posM.y - arrastando.startY;
+        arrastando.obj.x = Math.max(0.1, Math.min(C - 0.1, +(arrastando.x0 + dx).toFixed(2)));
+        arrastando.obj.y = Math.max(0.1, Math.min(L - 0.1, +(arrastando.y0 + dy).toFixed(2)));
+        atualizarTudo();
+      } else if (arrastando.tipo === 'vertice') {
+        const v = verticesSala[arrastando.idx];
+        if (v) {
+          v.x = Math.max(0, Math.min(C * 1.25, +(Math.round(posM.x * 20) / 20).toFixed(2)));
+          v.y = Math.max(0, Math.min(L * 1.25, +(Math.round(posM.y * 20) / 20).toFixed(2)));
+          atualizarTudo();
+        }
+      }
+    });
+
+    window.addEventListener('pointerup', () => { arrastando = null; });
+
+    // =========================================================================
+    // 4. CÁLCULOS FOTOMÉTRICOS E RENDERIZAÇÃO DO SVG
+    // =========================================================================
+    function calcularFluxoTotalAtivo() {
+      let totalLm = 0;
+      luminariasPlanta.forEach(l => {
+        const c = circuitosAtivos.find(x => x.id === l.circuitoId);
+        if (c) totalLm += (c.qtdLamp * c.lmUnit);
+      });
+      return totalLm;
+    }
+
+    function obterEtaAtual(K) {
+      if (document.getElementById('chkEtaManual')?.checked) {
+        return lerNum('etaInput', 0.50);
+      }
+      const rTeto = lerNum('corTeto', 80);
+      const rParede = lerNum('corParede', 50);
+      const rPiso = lerNum('corPiso', 30);
+      let baseK = 0.35;
+      if (K >= 0.8 && K < 1.0) baseK = 0.42;
+      else if (K >= 1.0 && K < 1.25) baseK = 0.48;
+      else if (K >= 1.25 && K < 1.5) baseK = 0.52;
+      else if (K >= 1.5 && K < 2.0) baseK = 0.58;
+      else if (K >= 2.0 && K < 2.5) baseK = 0.63;
+      else if (K >= 2.5) baseK = 0.68;
+      const eta = Math.max(0.20, Math.min(0.85, baseK + (rTeto - 50) * 0.0018 + (rParede - 30) * 0.0022 + (rPiso - 10) * 0.001));
+      const etaEl = document.getElementById('etaInput');
+      if (etaEl) etaEl.value = eta.toFixed(2);
+      return eta;
+    }
+
+    function atualizarTudo() {
+      const amb = obterObjetoAmbiente(document.getElementById('ambiente').value);
+      const E = lerNum('luxInput', 0);
+      const kelvinNum = Math.round(lerNum('tempCorInput', 3000));
+      const diagKelvin = validarTemperaturaCor(kelvinNum, amb);
+
+      const C = lerNum('comp', 0);
+      const L = lerNum('larg', 0);
+      const A = lerNum('alturaUtilInput', 1.90);
+      const d = lerNum('fatorD', 0.80);
+
+      const { area, perimetro } = calcularAreaEPerimetroSala();
+      let K = 0, eta = 0.50;
+
+      if (area > 0 && perimetro > 0) {
+        document.getElementById('lblArea').innerText = area.toFixed(2) + " m²";
+        document.getElementById('lblPerimetro').innerText = perimetro.toFixed(2) + " m";
+        if (A > 0) {
+          K = (2 * area) / (perimetro * A);
+          eta = obterEtaAtual(K);
+          document.getElementById('lblFatorK').innerText = K.toFixed(2);
+          document.getElementById('lblMaxEsp').innerText = (1.5 * A).toFixed(2) + " m";
+        } else {
+          document.getElementById('lblFatorK').innerText = "--";
+          document.getElementById('lblMaxEsp').innerText = "-- m";
+        }
+      } else {
+        document.getElementById('lblArea').innerText = "-- m²";
+        document.getElementById('lblPerimetro').innerText = "-- m";
+        document.getElementById('lblFatorK').innerText = "--";
+        document.getElementById('lblMaxEsp').innerText = "-- m";
+      }
+
+      let totalPecas = luminariasPlanta.length;
+      let totalLampadas = 0, fluxoTotal = 0, potTotal = 0;
+
+      luminariasPlanta.forEach(l => {
+        const c = circuitosAtivos.find(x => x.id === l.circuitoId);
+        if (c) {
+          totalLampadas += c.qtdLamp;
+          fluxoTotal += (c.qtdLamp * c.lmUnit);
+          potTotal += (c.qtdLamp * c.wattsUnit);
+        }
+      });
+
+      const luxReal = area > 0 ? ((fluxoTotal * eta * d) / area) : 0;
+
+      document.getElementById('resMetaLux').innerText = E > 0 ? `${E} lx` : "-- lx";
+      document.getElementById('resAdotado').innerText = totalPecas;
+      document.getElementById('resTotalLampadas').innerText = `${totalLampadas} lâmpadas`;
+      document.getElementById('resFluxoTotal').innerText = `${fluxoTotal.toLocaleString('pt-BR')} lm`;
+      document.getElementById('resPotTotal').innerText = `${potTotal} W`;
+      document.getElementById('resLuxReal').innerText = `${Math.round(luxReal)} lx`;
+      const pctMeta = E > 0 ? Math.round((luxReal / E) * 100) : 0;
+      document.getElementById('lblPctMeta').innerText = E > 0 ? `${pctMeta}% da meta` : "--";
+
+      const boxAlerta = document.getElementById('boxAlerta');
+      if (area <= 0) {
+        boxAlerta.className = "p-2.5 rounded-lg text-xs border bg-slate-900/50 border-slate-700 text-slate-400";
+        boxAlerta.innerText = "Informe Largura (C) e Comprimento (L) no Passo 2 para desenhar a planta do ambiente.";
+      } else if (totalPecas === 0) {
+        boxAlerta.className = "p-2.5 rounded-lg text-xs border bg-sky-950/40 border-sky-700 text-sky-200";
+        boxAlerta.innerHTML = `<strong>Planta Desenhada (${area.toFixed(2)} m²):</strong> Agora escolha uma luminária no <strong>Passo 3</strong> e clique em <strong>⚡ Distribuir Malha Auto</strong>, <strong>📐 Distribuir nas Laterais</strong> ou <strong>➕ Somar Peça(s)</strong>!`;
+      } else if (E > 0 && luxReal < E * 0.90) {
+        boxAlerta.className = "p-2.5 rounded-lg text-xs border bg-amber-950/60 border-amber-500 text-amber-200";
+        boxAlerta.innerHTML = `<strong>Atenção (Déficit Luminoso):</strong> A soma dos ${circuitosAtivos.length} circuito(s) entrega <strong>${Math.round(luxReal)} lx</strong> para os ${area.toFixed(2)} m² (Meta: ${E} lx). Adicione mais peças ou aumente os lúmens.`;
+      } else {
+        boxAlerta.className = "p-2.5 rounded-lg text-xs border bg-emerald-950/40 border-emerald-700 text-emerald-300";
+        boxAlerta.innerHTML = `<strong>Projeto Consolidado Validado:</strong> ${circuitosAtivos.length} circuito(s) somando <strong>${totalPecas} luminárias (${totalLampadas} lâmpadas)</strong> e entregando <strong>${Math.round(luxReal)} lx</strong> médios em ${area.toFixed(2)} m².`;
+      }
+
+      renderizarListaCircuitosUI(area, eta, d);
+      atualizarBarraInspecao(A);
+      renderizarPlantaSVG(document.getElementById('svgForro'), C, L, A, kelvinNum, false);
+      atualizarMemorialPrint(C, L, A, E, area, perimetro, K, eta, d, kelvinNum, diagKelvin, totalPecas, totalLampadas, potTotal, luxReal);
+    }
+
+    function renderizarListaCircuitosUI(area, eta, d) {
+      limparCircuitosVazios();
+      document.getElementById('lblQtdCircuitos').innerText = circuitosAtivos.length;
+      const cont = document.getElementById('listaCircuitosContainer');
+      if (circuitosAtivos.length === 0) {
+        cont.innerHTML = '<div class="text-xs text-slate-500 text-center py-2">Nenhuma luminária inserida ainda. Escolha um modelo acima e clique num dos botões de inserir.</div>';
+        return;
+      }
+
+      cont.innerHTML = '';
+      circuitosAtivos.forEach((c, idx) => {
+        const pecasDeste = luminariasPlanta.filter(l => l.circuitoId === c.id);
+        const qtdPecas = pecasDeste.length;
+        const phiCirc = qtdPecas * c.qtdLamp * c.lmUnit;
+        const luxCirc = area > 0 ? Math.round((phiCirc * eta * d) / area) : 0;
+        const isGrupoSel = itemSelecionado && itemSelecionado.circuitoId === c.id;
+
+        const div = document.createElement('div');
+        div.className = `flex justify-between items-center p-2 rounded-lg border text-xs cursor-pointer transition ${isGrupoSel ? 'bg-slate-800 border-orange-500' : 'bg-slate-900/90 border-slate-800 hover:bg-slate-800/60'}`;
+        div.onclick = () => {
+          if (pecasDeste[0]) itemSelecionado = { tipo: 'luminaria', id: pecasDeste[0].id, circuitoId: c.id };
+          atualizarTudo();
+        };
+
+        div.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full shrink-0" style="background:${c.cor}"></span>
+            <div>
+              <strong class="text-white block leading-tight">${idx + 1}. ${c.nome}</strong>
+              <span class="text-[10px] text-slate-400">${qtdPecas} pçs (${qtdPecas * c.qtdLamp} lâmp.) • Facho ${c.angulo}° • <strong>+${luxCirc} lx</strong></span>
+            </div>
+          </div>
+          <div class="flex items-center gap-1" onclick="event.stopPropagation()">
+            <button type="button" onclick="girarCircuitoInteiro('${c.id}')" class="px-1.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-sky-300 border border-slate-700 text-[10px]" title="Girar todas deste circuito">🔄</button>
+            <button type="button" onclick="excluirCircuitoInteiro('${c.id}')" class="px-1.5 py-1 rounded bg-red-950/60 hover:bg-red-900 text-red-300 border border-red-800/50 text-[10px]" title="Remover circuito inteiro">✕</button>
+          </div>
+        `;
+        cont.appendChild(div);
+      });
+    }
+
+    function atualizarBarraInspecao(A) {
+      const txt = document.getElementById('txtInspecaoPeca');
+      const boxBtn = document.getElementById('acoesPecaSelecionada');
+
+      if (!itemSelecionado) {
+        txt.innerHTML = "💡 Clique ou arraste qualquer luminária (<code>P1, P2...</code>), móvel ou canto de parede na planta abaixo.";
+        boxBtn.classList.add('hidden');
+        boxBtn.classList.remove('flex');
+        return;
+      }
+
+      boxBtn.classList.remove('hidden');
+      boxBtn.classList.add('flex');
+
+      if (itemSelecionado.tipo === 'luminaria') {
+        const idxP = luminariasPlanta.findIndex(l => l.id === itemSelecionado.id);
+        const lum = luminariasPlanta[idxP];
+        const circ = lum ? circuitosAtivos.find(c => c.id === lum.circuitoId) : null;
+        if (!lum || !circ) { itemSelecionado = null; return; }
+        const raioCone = A * Math.tan((circ.angulo * Math.PI) / 360);
+        const diamCone = (2 * raioCone).toFixed(2);
+        txt.innerHTML = `<strong style="color:${circ.cor}">🎯 Ponto P${idxP + 1} (${circ.nome}):</strong> Dist. Parede Esq (X)=<strong class="text-white">${lum.x.toFixed(2)}m</strong> | Sup (Y)=<strong class="text-white">${lum.y.toFixed(2)}m</strong> | <strong class="text-amber-300">Ø Feixe = ${diamCone}m</strong>`;
+      } else if (itemSelecionado.tipo === 'cenario') {
+        const mob = cenarioPlanta.find(m => m.id === itemSelecionado.id);
+        if (!mob) { itemSelecionado = null; return; }
+        txt.innerHTML = `<strong class="text-emerald-300">🛋️ Cenário (${mob.nome}):</strong> X=<strong class="text-white">${mob.x.toFixed(2)}m</strong> | Y=<strong class="text-white">${mob.y.toFixed(2)}m</strong> (${mob.comp}×${mob.larg}m | Altura h=${mob.h || 0.8}m)`;
+      } else if (itemSelecionado.tipo === 'vertice') {
+        const v = verticesSala[itemSelecionado.idx];
+        if (!v) { itemSelecionado = null; return; }
+        txt.innerHTML = `<strong class="text-orange-400">📐 Vértice da Parede #${itemSelecionado.idx + 1}:</strong> X=<strong class="text-white">${v.x.toFixed(2)}m</strong> | Y=<strong class="text-white">${v.y.toFixed(2)}m</strong>`;
+      }
+    }
+
+    // =========================================================================
+    // 5. MOTOR VETORIAL SVG (PLANTA + SOMBRAS + CONES + EIXOS COTADOS EXTERNOS)
+    // =========================================================================
+    function calcularVetorSombraMobiliario(mob, pdTotal) {
+      // Calcula o vetor de sombra projetada no piso a partir das luminárias mais próximas (ou luz zenital leve se não houver luzes)
+      const hMob = mob.h || 0.80;
+      const hLuz = Math.max(hMob + 0.35, pdTotal || 2.70);
+      const fatorAltura = Math.min(0.55, (hMob / (hLuz - hMob * 0.6)) * 0.22);
+
+      if (luminariasPlanta.length === 0) {
+        return { dx: 0.14 * hMob, dy: 0.14 * hMob };
+      }
+
+      let vx = 0, vy = 0, pesoTotal = 0;
+      luminariasPlanta.forEach(l => {
+        const dist = Math.hypot(mob.x - l.x, mob.y - l.y);
+        const peso = 1 / Math.max(0.35, dist * dist);
+        vx += (mob.x - l.x) * peso;
+        vy += (mob.y - l.y) * peso;
+        pesoTotal += peso;
+      });
+
+      if (pesoTotal > 0) {
+        vx /= pesoTotal;
+        vy /= pesoTotal;
+      }
+      const mag = Math.hypot(vx, vy);
+      if (mag < 0.05) return { dx: 0.08 * hMob, dy: 0.08 * hMob };
+      const lim = Math.min(0.48, mag * fatorAltura);
+      return { dx: (vx / mag) * lim, dy: (vy / mag) * lim };
+    }
+
+    function renderizarPlantaSVG(svgEl, C, L, A, kelvinNum, modoPrint = false) {
+      svgEl.innerHTML = '';
+      if (!(C > 0 && L > 0)) {
+        svgEl.innerHTML = `<text x="270" y="220" text-anchor="middle" fill="#64748b" font-size="11.5">Digite Largura (C) e Comprimento (L) no Passo 2 (ou clique em "Testar Exemplo Sala em L")</text>`;
+        return;
+      }
+
+      const form = document.getElementById('formatoSalaSelect').value;
+      if (verticesSala.length < 3) verticesSala = construirPoligonoPadrao(form, C, L);
+
+      // No modoPrint (Página 2 Fit to Page), usamos um canvas amplo 760x540 com margens generosas para cotas de eixo!
+      const W_SVG = modoPrint ? 760 : 540;
+      const H_SVG = modoPrint ? 540 : 440;
+      const PAD_LEFT = modoPrint ? 92 : 64;
+      const PAD_TOP = modoPrint ? 76 : 56;
+      const PAD_RIGHT = modoPrint ? 65 : 46;
+      const PAD_BOTTOM = modoPrint ? 55 : 44;
+
+      const maxX = Math.max(C, ...verticesSala.map(v => v.x));
+      const maxY = Math.max(L, ...verticesSala.map(v => v.y));
+      const scale = Math.min((W_SVG - PAD_LEFT - PAD_RIGHT) / maxX, (H_SVG - PAD_TOP - PAD_BOTTOM) / maxY);
+      const offsetX = PAD_LEFT + ((W_SVG - PAD_LEFT - PAD_RIGHT) - maxX * scale) / 2;
+      const offsetY = PAD_TOP + ((H_SVG - PAD_TOP - PAD_BOTTOM) - maxY * scale) / 2;
+
+      if (!modoPrint) transformView = { offsetX, offsetY, scale, C: maxX, L: maxY };
+
+      const mx = (xm) => offsetX + xm * scale;
+      const my = (ym) => offsetY + ym * scale;
+
+      const kStyle = obterCorKelvin(kelvinNum);
+      const pdTotal = lerNum('peDireito', 2.70);
+
+      // Definições SVG: ClipPath da Sala + Filtro de Sombra + Gradientes Radiais
+      const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+      const clipRoom = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
+      const clipId = modoPrint ? "clipSalaPrt" : "clipSalaScreen";
+      clipRoom.setAttribute("id", clipId);
+
+      if (form === 'elipse') {
+        const elClip = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+        elClip.setAttribute("cx", mx(C / 2)); elClip.setAttribute("cy", my(L / 2));
+        elClip.setAttribute("rx", (C / 2) * scale); elClip.setAttribute("ry", (L / 2) * scale);
+        clipRoom.appendChild(elClip);
+      } else {
+        const polyClip = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+        polyClip.setAttribute("points", verticesSala.map(v => `${mx(v.x)},${my(v.y)}`).join(" "));
+        clipRoom.appendChild(polyClip);
+      }
+      defs.appendChild(clipRoom);
+
+      circuitosAtivos.forEach(c => {
+        const grad = document.createElementNS("http://www.w3.org/2000/svg", "radialGradient");
+        grad.setAttribute("id", `grad_${modoPrint ? 'prt_' : ''}${c.id}`);
+        const phiPeca = c.qtdLamp * c.lmUnit;
+        const opacidadeCentro = modoPrint
+          ? Math.min(0.32, Math.max(0.14, phiPeca / 3500))
+          : Math.min(0.65, Math.max(0.24, phiPeca / 2500));
+        const corLuz = modoPrint ? "#f59e0b" : kStyle.bg;
+
+        grad.innerHTML = `
+          <stop offset="0%" stop-color="${corLuz}" stop-opacity="${opacidadeCentro}"/>
+          <stop offset="55%" stop-color="${corLuz}" stop-opacity="${(opacidadeCentro * 0.45).toFixed(2)}"/>
+          <stop offset="100%" stop-color="${corLuz}" stop-opacity="0"/>
+        `;
+        defs.appendChild(grad);
+      });
+      svgEl.appendChild(defs);
+
+      // 1. DESENHO DO PISO/FORRO DO RECINTO
+      const corFundoSala = modoPrint ? "#ffffff" : "#0f172a";
+      const corParede = modoPrint ? "#0f172a" : "#94a3b8";
+
+      if (form === 'elipse') {
+        const roomEl = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+        roomEl.setAttribute("cx", mx(C / 2)); roomEl.setAttribute("cy", my(L / 2));
+        roomEl.setAttribute("rx", (C / 2) * scale); roomEl.setAttribute("ry", (L / 2) * scale);
+        roomEl.setAttribute("fill", corFundoSala);
+        roomEl.setAttribute("stroke", corParede);
+        roomEl.setAttribute("stroke-width", modoPrint ? "3" : "2.5");
+        svgEl.appendChild(roomEl);
+      } else {
+        const roomPoly = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+        roomPoly.setAttribute("points", verticesSala.map(v => `${mx(v.x)},${my(v.y)}`).join(" "));
+        roomPoly.setAttribute("fill", corFundoSala);
+        roomPoly.setAttribute("stroke", corParede);
+        roomPoly.setAttribute("stroke-width", modoPrint ? "3" : "2.5");
+        svgEl.appendChild(roomPoly);
+      }
+
+      // Marcador do Ponto Zero (0,00m) no Canto Superior Esquerdo para o Pedreiro/Gesseiro
+      const gZero = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      const zeroDot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      zeroDot.setAttribute("cx", mx(0)); zeroDot.setAttribute("cy", my(0));
+      zeroDot.setAttribute("r", "4");
+      zeroDot.setAttribute("fill", "#ef4444");
+      gZero.appendChild(zeroDot);
+      const zeroTxt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      zeroTxt.setAttribute("x", mx(0) - 6); zeroTxt.setAttribute("y", my(0) - 8);
+      zeroTxt.setAttribute("font-size", modoPrint ? "9.5" : "8.5");
+      zeroTxt.setAttribute("font-weight", "bold");
+      zeroTxt.setAttribute("fill", modoPrint ? "#b91c1c" : "#f87171");
+      zeroTxt.textContent = "REF (0,00m)";
+      gZero.appendChild(zeroTxt);
+      svgEl.appendChild(gZero);
+
+      const gClipped = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      gClipped.setAttribute("clip-path", `url(#${clipId})`);
+      svgEl.appendChild(gClipped);
+
+      // 2. DESENHO DO CENÁRIO / MOBILIÁRIO + PROJEÇÃO DE SOMBRAS NO PISO!
+      cenarioPlanta.forEach(mob => {
+        const wPx = (mob.rot ? mob.larg : mob.comp) * scale;
+        const hPx = (mob.rot ? mob.comp : mob.larg) * scale;
+        const cx = mx(mob.x), cy = my(mob.y);
+        const isSel = !modoPrint && itemSelecionado && itemSelecionado.id === mob.id;
+
+        const gMob = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        if (!modoPrint) {
+          gMob.style.cursor = "move";
+          gMob.onpointerdown = (e) => iniciarArrasteSVG(e, 'cenario', mob.id);
+        }
+
+        // 2A. PROJEÇÃO DE SOMBRA DINÂMICA DO MÓVEL (Calculada conforme as luzes do teto!)
+        if (mostrarSombras) {
+          const vetSombra = calcularVetorSombraMobiliario(mob, pdTotal);
+          const sdx = vetSombra.dx * scale;
+          const sdy = vetSombra.dy * scale;
+
+          if (mob.forma === 'oval') {
+            const sombraEl = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+            sombraEl.setAttribute("cx", cx + sdx);
+            sombraEl.setAttribute("cy", cy + sdy);
+            sombraEl.setAttribute("rx", (wPx / 2) * 1.06);
+            sombraEl.setAttribute("ry", (hPx / 2) * 1.06);
+            sombraEl.setAttribute("fill", modoPrint ? "#94a3b8" : "#020617");
+            sombraEl.setAttribute("fill-opacity", modoPrint ? "0.35" : "0.68");
+            gMob.appendChild(sombraEl);
+          } else {
+            // Polígono volumétrico conectando a base do móvel à sombra projetada
+            const x1 = cx - wPx / 2, y1 = cy - hPx / 2;
+            const x2 = cx + wPx / 2, y2 = cy + hPx / 2;
+            const sombraRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            sombraRect.setAttribute("x", x1 + sdx);
+            sombraRect.setAttribute("y", y1 + sdy);
+            sombraRect.setAttribute("width", wPx * 1.04);
+            sombraRect.setAttribute("height", hPx * 1.04);
+            sombraRect.setAttribute("rx", "5");
+            sombraRect.setAttribute("fill", modoPrint ? "#94a3b8" : "#020617");
+            sombraRect.setAttribute("fill-opacity", modoPrint ? "0.35" : "0.68");
+            gMob.appendChild(sombraRect);
+          }
+        }
+
+        // 2B. CORPO DO MÓVEL
+        if (mob.forma === 'oval') {
+          const el = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+          el.setAttribute("cx", cx); el.setAttribute("cy", cy);
+          el.setAttribute("rx", wPx / 2); el.setAttribute("ry", hPx / 2);
+          el.setAttribute("fill", modoPrint ? "#f1f5f9" : "#1e293b");
+          el.setAttribute("stroke", isSel ? "#34d399" : (modoPrint ? "#475569" : "#64748b"));
+          el.setAttribute("stroke-width", isSel ? "2" : "1.3");
+          el.setAttribute("stroke-dasharray", "4,2");
+          gMob.appendChild(el);
+        } else {
+          const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+          rect.setAttribute("x", cx - wPx / 2); rect.setAttribute("y", cy - hPx / 2);
+          rect.setAttribute("width", wPx); rect.setAttribute("height", hPx);
+          rect.setAttribute("rx", "4");
+          rect.setAttribute("fill", modoPrint ? "#f1f5f9" : "#1e293b");
+          rect.setAttribute("stroke", isSel ? "#34d399" : (modoPrint ? "#475569" : "#64748b"));
+          rect.setAttribute("stroke-width", isSel ? "2" : "1.3");
+          rect.setAttribute("stroke-dasharray", "4,2");
+          gMob.appendChild(rect);
+        }
+
+        const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        txt.setAttribute("x", cx); txt.setAttribute("y", cy + 3);
+        txt.setAttribute("text-anchor", "middle");
+        txt.setAttribute("font-size", modoPrint ? "9.5" : "8.5");
+        txt.setAttribute("font-weight", "600");
+        txt.setAttribute("fill", modoPrint ? "#334155" : "#cbd5e1");
+        txt.setAttribute("pointer-events", "none");
+        txt.textContent = `${mob.nome} (h=${mob.h || 0.8}m)`;
+        gMob.appendChild(txt);
+        gClipped.appendChild(gMob);
+      });
+
+      // 3. MAPA DE CALOR FOTOMÉTRICO (CONES DE ALCANCE)
+      if (mostrarMapaCalor && A > 0) {
+        luminariasPlanta.forEach(lum => {
+          const circ = circuitosAtivos.find(c => c.id === lum.circuitoId);
+          if (!circ) return;
+          const angRad = (Math.min(145, circ.angulo) * Math.PI) / 360;
+          const raioMetros = Math.min(Math.max(C, L) * 0.85, A * Math.tan(angRad));
+          const raioPx = raioMetros * scale;
+
+          const cone = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          cone.setAttribute("cx", mx(lum.x));
+          cone.setAttribute("cy", my(lum.y));
+          cone.setAttribute("r", raioPx);
+          cone.setAttribute("fill", `url(#grad_${modoPrint ? 'prt_' : ''}${circ.id})`);
+          if (!modoPrint) cone.setAttribute("class", "cone-calor");
+          gClipped.appendChild(cone);
+
+          const bordaCone = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          bordaCone.setAttribute("cx", mx(lum.x));
+          bordaCone.setAttribute("cy", my(lum.y));
+          bordaCone.setAttribute("r", raioPx);
+          bordaCone.setAttribute("fill", "none");
+          bordaCone.setAttribute("stroke", circ.cor);
+          bordaCone.setAttribute("stroke-opacity", modoPrint ? "0.55" : "0.28");
+          bordaCone.setAttribute("stroke-width", modoPrint ? "1.1" : "0.9");
+          bordaCone.setAttribute("stroke-dasharray", "4,3");
+          bordaCone.setAttribute("pointer-events", "none");
+          gClipped.appendChild(bordaCone);
+        });
+      }
+
+      // 4. SISTEMA DE EIXOS DE OBRA E COTAS CLARAS (SEM POLUIÇÃO VISUAL!)
+      if (mostrarCotasVisuais) {
+        const gCotas = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        gCotas.setAttribute("pointer-events", "none");
+
+        // 4A. Cotas das paredes nas bordas externas inferiores/direitas
+        if (form === 'elipse') {
+          desenharEtiquetaCota(gCotas, mx(C / 2), my(L) + 22, `Largura Total: ${C.toFixed(2)}m`, modoPrint ? "#0f172a" : "#cbd5e1", modoPrint);
+          desenharEtiquetaCota(gCotas, mx(C) + 32, my(L / 2), `Comp. Total: ${L.toFixed(2)}m`, modoPrint ? "#0f172a" : "#cbd5e1", modoPrint);
+        } else {
+          for (let i = 0; i < verticesSala.length; i++) {
+            const p1 = verticesSala[i];
+            const p2 = verticesSala[(i + 1) % verticesSala.length];
+            const compParede = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+            if (compParede >= 0.35) {
+              const midX = (mx(p1.x) + mx(p2.x)) / 2;
+              const midY = (my(p1.y) + my(p2.y)) / 2;
+              const dx = p2.x - p1.x, dy = p2.y - p1.y;
+              const nx = (dy / compParede) * (modoPrint ? 20 : 15);
+              const ny = (-dx / compParede) * (modoPrint ? 20 : 15);
+              desenharEtiquetaCota(gCotas, midX + nx, midY + ny, `${compParede.toFixed(2)}m`, modoPrint ? "#0f172a" : "#94a3b8", modoPrint, "9.5");
+            }
+          }
+        }
+
+        // 4B. LINHAS DE EIXO COTADAS NAS MARGENS (TOPO = EIXOS X | ESQUERDA = EIXOS Y)
+        // Agrupa coordenadas X e Y únicas (tolerância de 6cm) para criar uma régua de marcação limpa para o pedreiro!
+        const eixosX = extrairEixosUnicos(luminariasPlanta.map(l => l.x), 0.08);
+        const eixosY = extrairEixosUnicos(luminariasPlanta.map(l => l.y), 0.08);
+
+        eixosX.forEach(xVal => {
+          const px = mx(xVal);
+          const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+          line.setAttribute("x1", px); line.setAttribute("y1", offsetY - 16);
+          line.setAttribute("x2", px); line.setAttribute("y2", my(maxY));
+          line.setAttribute("stroke", modoPrint ? "#64748b" : "#334155");
+          line.setAttribute("stroke-width", "0.8");
+          line.setAttribute("stroke-dasharray", "3,3");
+          gCotas.appendChild(line);
+
+          // Etiqueta de distância X acumulada a partir da Parede Esquerda (no topo)
+          desenharEtiquetaCota(gCotas, px, offsetY - 22, `X:${xVal.toFixed(2)}m`, modoPrint ? "#0369a1" : "#38bdf8", modoPrint, modoPrint ? "9.5" : "8.5");
+        });
+
+        eixosY.forEach(yVal => {
+          const py = my(yVal);
+          const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+          line.setAttribute("x1", offsetX - 16); line.setAttribute("y1", py);
+          line.setAttribute("x2", mx(maxX)); line.setAttribute("y2", py);
+          line.setAttribute("stroke", modoPrint ? "#64748b" : "#334155");
+          line.setAttribute("stroke-width", "0.8");
+          line.setAttribute("stroke-dasharray", "3,3");
+          gCotas.appendChild(line);
+
+          // Etiqueta de distância Y acumulada a partir da Parede Superior (na esquerda)
+          desenharEtiquetaCota(gCotas, offsetX - 34, py, `Y:${yVal.toFixed(2)}m`, modoPrint ? "#0369a1" : "#38bdf8", modoPrint, modoPrint ? "9.5" : "8.5");
+        });
+
+        // 4C. Na tela interativa, destaca a cota entre eixos para a peça selecionada
+        if (!modoPrint && itemSelecionado && itemSelecionado.tipo === 'luminaria') {
+          const lumFoco = luminariasPlanta.find(l => l.id === itemSelecionado.id);
+          if (lumFoco) {
+            let maisProx = null, menorDist = 999;
+            luminariasPlanta.forEach(outra => {
+              if (outra.id !== lumFoco.id) {
+                const dist = Math.hypot(outra.x - lumFoco.x, outra.y - lumFoco.y);
+                if (dist > 0.05 && dist < menorDist) { menorDist = dist; maisProx = outra; }
+              }
+            });
+            if (maisProx) {
+              desenharLinhaCotaSVG(gCotas, mx(lumFoco.x), my(lumFoco.y), mx(maisProx.x), my(maisProx.y), `eixo: ${menorDist.toFixed(2)}m`, "#f97316", false);
+            }
+          }
+        }
+
+        svgEl.appendChild(gCotas);
+      }
+
+      // 5. DESENHO DAS LUMINÁRIAS EM ESCALA REAL + IDENTIFICADOR P1, P2, P3...
+      luminariasPlanta.forEach((lum, idxP) => {
+        const circ = circuitosAtivos.find(c => c.id === lum.circuitoId);
+        if (!circ) return;
+
+        const dimX = lum.rot ? circ.larg : circ.comp;
+        const dimY = lum.rot ? circ.comp : circ.larg;
+        const wPx = Math.max(modoPrint ? 16 : 13, dimX * scale);
+        const hPx = Math.max(modoPrint ? 16 : 13, dimY * scale);
+        const cx = mx(lum.x), cy = my(lum.y);
+
+        const isSel = !modoPrint && itemSelecionado && (itemSelecionado.id === lum.id || (modoArraste === 'grupo' && itemSelecionado.circuitoId === lum.circuitoId));
+
+        const gLum = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        if (!modoPrint) {
+          gLum.style.cursor = "grab";
+          gLum.onpointerdown = (e) => iniciarArrasteSVG(e, 'luminaria', lum.id, lum.circuitoId);
+          gLum.oncontextmenu = (e) => { e.preventDefault(); e.stopPropagation(); lum.rot = !lum.rot; atualizarTudo(); };
+        }
+
+        if (circ.formato === 'painel_red') {
+          const cEl = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          cEl.setAttribute("cx", cx); cEl.setAttribute("cy", cy);
+          cEl.setAttribute("r", Math.max(wPx, hPx) / 2);
+          cEl.setAttribute("fill", modoPrint ? "#fef3c7" : kStyle.bg);
+          cEl.setAttribute("stroke", isSel ? "#ffffff" : (modoPrint ? "#0f172a" : circ.cor));
+          cEl.setAttribute("stroke-width", isSel ? "2.5" : "2");
+          gLum.appendChild(cEl);
+        } else {
+          const rEl = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+          rEl.setAttribute("x", cx - wPx / 2); rEl.setAttribute("y", cy - hPx / 2);
+          rEl.setAttribute("width", wPx); rEl.setAttribute("height", hPx);
+          rEl.setAttribute("rx", "2.5");
+          rEl.setAttribute("fill", modoPrint ? "#fef3c7" : "#090d16");
+          rEl.setAttribute("stroke", isSel ? "#ffffff" : (modoPrint ? "#0f172a" : circ.cor));
+          rEl.setAttribute("stroke-width", isSel ? "2.5" : "2");
+          gLum.appendChild(rEl);
+
+          const luzInterna = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+          luzInterna.setAttribute("x", cx - (wPx * 0.68) / 2);
+          luzInterna.setAttribute("y", cy - (hPx * 0.68) / 2);
+          luzInterna.setAttribute("width", wPx * 0.68);
+          luzInterna.setAttribute("height", hPx * 0.68);
+          luzInterna.setAttribute("rx", "1.5");
+          luzInterna.setAttribute("fill", modoPrint ? circ.cor : kStyle.bg);
+          gLum.appendChild(luzInterna);
+        }
+
+        // Tag de Numeração P1, P2, P3... (Para cruzar com a Tabela do Pedreiro na Página 2)
+        const tagTxt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        tagTxt.setAttribute("x", cx);
+        tagTxt.setAttribute("y", cy - (hPx / 2) - 4);
+        tagTxt.setAttribute("text-anchor", "middle");
+        tagTxt.setAttribute("font-size", modoPrint ? "10" : "8.5");
+        tagTxt.setAttribute("font-weight", "900");
+        tagTxt.setAttribute("fill", modoPrint ? "#0f172a" : "#ffffff");
+        tagTxt.setAttribute("pointer-events", "none");
+        tagTxt.textContent = `P${idxP + 1}`;
+        gLum.appendChild(tagTxt);
+
+        svgEl.appendChild(gLum);
+      });
+
+      // 6. VÉRTICES ARRASTÁVEIS DAS PAREDES (NA TELA INTERATIVA)
+      if (!modoPrint && form !== 'elipse') {
+        verticesSala.forEach((v, idx) => {
+          const handle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          handle.setAttribute("cx", mx(v.x));
+          handle.setAttribute("cy", my(v.y));
+          handle.setAttribute("r", "5.5");
+          handle.setAttribute("fill", "#f97316");
+          handle.setAttribute("stroke", "#0f172a");
+          handle.setAttribute("stroke-width", "2");
+          handle.setAttribute("class", "handle-vertice");
+          handle.onpointerdown = (e) => iniciarArrasteSVG(e, 'vertice', idx);
+          svgEl.appendChild(handle);
+        });
+      }
+    }
+
+    function extrairEixosUnicos(valores, tolerancia = 0.08) {
+      const ordenados = [...valores].sort((a, b) => a - b);
+      const unicos = [];
+      ordenados.forEach(v => {
+        if (unicos.length === 0 || Math.abs(v - unicos[unicos.length - 1]) > tolerancia) {
+          unicos.push(v);
+        }
+      });
+      return unicos;
+    }
+
+    function desenharLinhaCotaSVG(grupo, x1, y1, x2, y2, texto, cor, modoPrint) {
+      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      line.setAttribute("x1", x1); line.setAttribute("y1", y1);
+      line.setAttribute("x2", x2); line.setAttribute("y2", y2);
+      line.setAttribute("stroke", cor);
+      line.setAttribute("stroke-width", "1.3");
+      line.setAttribute("stroke-dasharray", "3,2");
+      grupo.appendChild(line);
+      desenharEtiquetaCota(grupo, (x1 + x2) / 2, (y1 + y2) / 2 - 5, texto, cor, modoPrint, "9.5");
+    }
+
+    function desenharEtiquetaCota(grupo, x, y, texto, cor, modoPrint, fontSize = "10") {
+      const bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      const wTxt = texto.length * 5.6 + 8;
+      bg.setAttribute("x", x - wTxt / 2);
+      bg.setAttribute("y", y - 9);
+      bg.setAttribute("width", wTxt);
+      bg.setAttribute("height", 13);
+      bg.setAttribute("rx", "3");
+      bg.setAttribute("fill", modoPrint ? "#ffffff" : "#0f172a");
+      bg.setAttribute("fill-opacity", modoPrint ? "0.92" : "0.85");
+      if (modoPrint) {
+        bg.setAttribute("stroke", "#cbd5e1");
+        bg.setAttribute("stroke-width", "0.7");
+      }
+      grupo.appendChild(bg);
+
+      const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      txt.setAttribute("x", x);
+      txt.setAttribute("y", y + 1);
+      txt.setAttribute("text-anchor", "middle");
+      txt.setAttribute("font-size", fontSize);
+      txt.setAttribute("font-weight", "bold");
+      txt.setAttribute("fill", cor);
+      txt.textContent = texto;
+      grupo.appendChild(txt);
+    }
+
+    // =========================================================================
+    // 6. EXEMPLO RÁPIDO SALA EM "L" + MEMORIAL PDF 2 PÁGINAS PARA OBRA
+    // =========================================================================
+    function carregarExemploSalaEmL() {
+      selecionarSetor('residencial', true);
+      document.getElementById('ambiente').value = 'res_sala_jantar';
+      renderizarBotoesCenarioContextual();
+      document.getElementById('luxInput').value = 200;
+      definirKelvin(3000);
+      document.getElementById('formatoSalaSelect').value = 'ele';
+      document.getElementById('comp').value = 4.50;
+      document.getElementById('larg').value = 9.40;
+      document.getElementById('peDireito').value = 2.70;
+      document.getElementById('alturaUtilInput').value = 1.90;
+      verticesSala = construirPoligonoPadrao('ele', 4.50, 9.40);
+
+      circuitosAtivos = [
+        { id: 'c_pendente', nome: 'Pendente Mesa Jantar Ø50cm', link: '', cor: '#f97316', formato: 'painel_red', qtdLamp: 6, lmUnit: 400, wattsUnit: 4, angulo: 100, comp: 0.50, larg: 0.50 },
+        { id: 'c_spots',    nome: 'Spot GU10 MR16 Dicroica 36°', link: '', cor: '#38bdf8', formato: 'spot',       qtdLamp: 1, lmUnit: 525, wattsUnit: 7, angulo: 36,  comp: 0.12, larg: 0.12 },
+        { id: 'c_sanca',    nome: 'Fita LED Sanca Lateral (Mód. 1m)', link: '', cor: '#34d399', formato: 'linear', qtdLamp: 1, lmUnit: 1000, wattsUnit: 12, angulo: 120, comp: 1.00, larg: 0.05 }
+      ];
+
+      cenarioPlanta = [
+        { id: 'm_mesa', nome: 'Mesa Jantar Oval', comp: 2.10, larg: 1.15, h: 0.78, forma: 'oval', x: 1.55, y: 6.20, rot: false },
+        { id: 'm_sofa', nome: 'Sofá 3 Lugares',   comp: 2.30, larg: 0.95, h: 0.85, forma: 'ret',  x: 1.60, y: 2.10, rot: false },
+        { id: 'm_est',  nome: 'Cristaleira Alta', comp: 1.80, larg: 0.45, h: 2.10, forma: 'ret',  x: 3.90, y: 1.90, rot: true }
+      ];
+
+      luminariasPlanta = [
+        { id: 'l_pend1', circuitoId: 'c_pendente', x: 1.55, y: 6.20, rot: false },
+        { id: 'l_sp1',   circuitoId: 'c_spots',    x: 0.45, y: 1.20, rot: false },
+        { id: 'l_sp2',   circuitoId: 'c_spots',    x: 0.45, y: 3.00, rot: false },
+        { id: 'l_sp3',   circuitoId: 'c_spots',    x: 0.45, y: 4.80, rot: false },
+        { id: 'l_sp4',   circuitoId: 'c_spots',    x: 0.45, y: 6.60, rot: false },
+        { id: 'l_sp5',   circuitoId: 'c_spots',    x: 0.45, y: 8.40, rot: false },
+        { id: 'l_sp6',   circuitoId: 'c_spots',    x: 4.05, y: 1.20, rot: false },
+        { id: 'l_sp7',   circuitoId: 'c_spots',    x: 4.05, y: 3.00, rot: false },
+        { id: 'l_sc1',   circuitoId: 'c_sanca',    x: 2.65, y: 5.20, rot: true },
+        { id: 'l_sc2',   circuitoId: 'c_sanca',    x: 2.65, y: 6.80, rot: true },
+        { id: 'l_sc3',   circuitoId: 'c_sanca',    x: 2.65, y: 8.30, rot: true }
+      ];
+
+      itemSelecionado = { tipo: 'luminaria', id: 'l_pend1', circuitoId: 'c_pendente' };
+      atualizarTudo();
+    }
+
+    function atualizarMemorialPrint(C, L, A, E, area, perimetro, K, eta, d, kelvinNum, diagKelvin, totalPecas, totalLampadas, potTotal, luxReal) {
+      if (!(C > 0 && L > 0)) return;
+      const amb = obterObjetoAmbiente(document.getElementById('ambiente').value);
+      const pd = lerNum('peDireito', 2.70);
+      const formNome = document.getElementById('formatoSalaSelect').options[document.getElementById('formatoSalaSelect').selectedIndex].text;
+      const nomeProj = document.getElementById('nomeProjetoInput').value || (amb ? amb.nome.split('(')[0].trim() : "Estudo Luminotécnico");
+
+      // Cabeçalhos e Cards Página 1
+      document.getElementById('prtProjeto').innerText = nomeProj;
+      document.getElementById('prtTituloFolha2').innerText = `Planta Executiva de Forro Cotada — ${nomeProj}`;
+      document.getElementById('prtData').innerText = new Date().toLocaleDateString('pt-BR');
+      document.getElementById('prtCardArea').innerText = `${area.toFixed(2)} m²`;
+      document.getElementById('prtCardPD').innerText = `Pé-direito: ${pd.toFixed(2)} m (A=${A.toFixed(2)}m)`;
+      document.getElementById('prtCardPecas').innerText = `${totalPecas} Luminárias`;
+      document.getElementById('prtCardLamp').innerText = `${totalLampadas} lâmpadas (${circuitosAtivos.length} circuito(s))`;
+      document.getElementById('prtCardWatts').innerText = `${potTotal} W`;
+      const amp127 = (potTotal / 127).toFixed(1);
+      const amp220 = (potTotal / 220).toFixed(1);
+      document.getElementById('prtCardAmperes').innerText = `${amp127}A (127V) | ${amp220}A (220V)`;
+      document.getElementById('prtCardLux').innerText = `${Math.round(luxReal)} lx`;
+      document.getElementById('prtCardMeta').innerText = `Meta ABNT: ${E} lx`;
+
+      // Tabela 1: Parâmetros
+      document.getElementById('prtAmbiente').innerText = amb ? amb.nome.split('[')[0].trim() : "Personalizado";
+      document.getElementById('prtLuxAlvo').innerText = `${E} lx ${amb ? '(' + amb.irc + ')' : ''}`;
+      document.getElementById('prtDimensoes').innerText = `${formNome} (Quadro Base ${C.toFixed(2)}m × ${L.toFixed(2)}m)`;
+      document.getElementById('prtAreaPD').innerText = `Área Real: ${area.toFixed(2)} m² | Perímetro: ${perimetro.toFixed(2)} m`;
+      document.getElementById('prtAlturaK').innerText = `A = ${A.toFixed(2)} m | K = ${K.toFixed(2)}`;
+      document.getElementById('prtEtaD').innerText = `η = ${eta.toFixed(2)} | d = ${d.toFixed(2)}`;
+      document.getElementById('prtKelvin').innerText = `${kelvinNum}K (${diagKelvin.classeNbr}) — ${diagKelvin.statusCurto}`;
+      document.getElementById('prtLuxReal').innerText = `${Math.round(luxReal)} lx (${totalPecas} peças / ${totalLampadas} lâmpadas)`;
+
+      // Guia Elétrico Amigável (Seção 3)
+      document.getElementById('prtGuiaEletrica').innerHTML = `
+        1. <strong>Potência Total Instalada:</strong> ${potTotal} W (Corrente: <strong>${amp127} A em 127V</strong> ou <strong>${amp220} A em 220V</strong>).<br>
+        2. <strong>Fiação e Proteção Mínima (NBR 5410):</strong> Cabo seção mínima <strong>1,5 mm²</strong> (Fase + Neutro + Terra) e Disjuntor de <strong>10A</strong> dedicado para iluminação.<br>
+        3. <strong>Separação de Teclas no Interruptor:</strong> Recomenda-se dividir os <strong>${circuitosAtivos.length} circuito(s)</strong> em retornos independentes para permitir acendimento parcial.
+      `;
+
+      // Tabela 2: Circuitos e Compras
+      const tbody = document.getElementById('prtTabelaLuminarias');
+      tbody.innerHTML = '';
+
+      circuitosAtivos.forEach((c, idxC) => {
+        const qtdP = luminariasPlanta.filter(l => l.circuitoId === c.id).length;
+        if (qtdP <= 0) return;
+        const fluxoCirc = qtdP * c.qtdLamp * c.lmUnit;
+        const luxCirc = area > 0 ? Math.round((fluxoCirc * eta * d) / area) : 0;
+        const diamFacho = (2 * A * Math.tan((c.angulo * Math.PI) / 360)).toFixed(2);
+        const htmlLink = c.link ? `<div class="text-[9px] text-sky-700 underline break-all"><a href="${c.link}" target="_blank">${c.link}</a></div>` : '';
+
+        const tr = document.createElement('tr');
+        tr.className = "border-b border-slate-300";
+        tr.innerHTML = `
+          <td class="p-1.5 border-r border-slate-300"><strong>Circuito ${idxC + 1}: ${c.nome}</strong>${htmlLink}</td>
+          <td class="p-1.5 border-r border-slate-300 text-center">${(c.comp*100).toFixed(0)} × ${(c.larg*100).toFixed(0)} cm</td>
+          <td class="p-1.5 border-r border-slate-300 text-center">${c.angulo}° (Ø ${diamFacho}m)</td>
+          <td class="p-1.5 border-r border-slate-300 text-center font-bold">${qtdP} un.</td>
+          <td class="p-1.5 border-r border-slate-300 text-center">${qtdP * c.qtdLamp} lâmp.</td>
+          <td class="p-1.5 border-r border-slate-300 text-center font-bold text-emerald-800">${fluxoCirc.toLocaleString('pt-BR')} lm (+${luxCirc} lx)</td>
+          <td class="p-1.5 text-center">${qtdP * c.qtdLamp * c.wattsUnit} W</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Página 2: Croqui Ampliado Fit to Page + Tabela de Trena Ponto a Ponto
+      renderizarPlantaSVG(document.getElementById('svgForroPrint'), C, L, A, kelvinNum, true);
+      document.getElementById('prtLegendaForro').innerText = 
+        `Quadro Base: ${C.toFixed(2)}m × ${L.toFixed(2)}m (Área Real: ${area.toFixed(2)} m²) • As linhas tracejadas no topo (X) e na esquerda (Y) indicam os alinhamentos de trena a partir do Ponto REF (0,00m).`;
+
+      const tbodyObra = document.getElementById('prtTabelaCoordenadasObra');
+      tbodyObra.innerHTML = '';
+
+      luminariasPlanta.forEach((lum, idxP) => {
+        const circ = circuitosAtivos.find(c => c.id === lum.circuitoId);
+        if (!circ) return;
+
+        // Calcula distância até a luminária vizinha mais próxima
+        let menorDist = null;
+        luminariasPlanta.forEach((outra, idxO) => {
+          if (idxO !== idxP) {
+            const dist = Math.hypot(outra.x - lum.x, outra.y - lum.y);
+            if (dist > 0.05 && (menorDist === null || dist < menorDist)) menorDist = dist;
+          }
+        });
+
+        const tr = document.createElement('tr');
+        tr.className = "border-b border-slate-300";
+        tr.innerHTML = `
+          <td class="p-1 border-r border-slate-300 text-center font-black bg-slate-100">P${idxP + 1}</td>
+          <td class="p-1 border-r border-slate-300"><strong>${circ.nome}</strong></td>
+          <td class="p-1 border-r border-slate-300 text-center font-bold text-sky-900">X = ${lum.x.toFixed(2)} m <span class="text-[10px] font-normal text-slate-500">(${(lum.x*100).toFixed(0)} cm)</span></td>
+          <td class="p-1 border-r border-slate-300 text-center font-bold text-sky-900">Y = ${lum.y.toFixed(2)} m <span class="text-[10px] font-normal text-slate-500">(${(lum.y*100).toFixed(0)} cm)</span></td>
+          <td class="p-1 border-r border-slate-300 text-center font-semibold text-orange-800">${menorDist !== null ? menorDist.toFixed(2) + ' m' : 'Única'}</td>
+          <td class="p-1 text-center">${lum.rot ? '90° Vertical' : '0° Horizontal'}</td>
+        `;
+        tbodyObra.appendChild(tr);
+      });
+    }
+
+    function destacarMarcoKelvin(kelvinNum) {
+      [2200, 2700, 3000, 4000, 5000, 6500].forEach(m => {
+        const btn = document.getElementById('btnK' + m);
+        if (btn) {
+          if (kelvinNum === m) btn.classList.add('ring-2', 'ring-orange-500', 'bg-slate-700');
+          else btn.classList.remove('ring-2', 'ring-orange-500', 'bg-slate-700');
+        }
+      });
+    }
+
+    function validarTemperaturaCor(kelvinNum, amb) {
+      const boxK = document.getElementById('boxAlertaKelvin');
+      const lblFaixa = document.getElementById('lblFaixaRecomendadaK');
+      const temInputK = document.getElementById('tempCorInput').value !== "";
+
+      let classeNbr = kelvinNum < 3300 ? "Quente" : (kelvinNum > 5300 ? "Fria" : "Intermediária / Neutra");
+      if (amb) lblFaixa.innerHTML = `Recomendado: <strong class="text-orange-300">${amb.tempMin}K a ${amb.tempMax}K</strong> (Ideal: ${amb.tempPadrao}K)`;
+      else lblFaixa.innerText = "Escolha livre (2700K-3000K relaxamento | 4000K+ foco)";
+
+      if (!temInputK && !amb) {
+        destacarMarcoKelvin(0);
+        return { classeNbr, statusCurto: "Não informada" };
+      }
+      destacarMarcoKelvin(kelvinNum);
+
+      if (!amb || (kelvinNum >= amb.tempMin && kelvinNum <= amb.tempMax)) {
+        boxK.className = "p-2 rounded-lg text-[11px] border bg-emerald-950/40 border-emerald-700 text-emerald-300";
+        boxK.innerHTML = `<strong>✅ Temperatura Adequada (${kelvinNum}K - ${classeNbr}):</strong> Alinhada ao conforto visual do ambiente.`;
+        return { classeNbr, statusCurto: "Adequada" };
+      } else {
+        boxK.className = "p-2 rounded-lg text-[11px] border bg-amber-950/60 border-amber-500 text-amber-200";
+        boxK.innerHTML = `<strong>⚠️ Alerta de Conforto (${kelvinNum}K - ${classeNbr}):</strong> Fora da faixa recomendada (${amb.tempMin}K–${amb.tempMax}K), mas mantida no cálculo.`;
+        return { classeNbr, statusCurto: `Personalizada (Rec: ${amb.tempMin}-${amb.tempMax}K)` };
+      }
+    }
+
+    function selecionarSetor(setor, manterEmBranco = false) {
+      setorAtual = setor;
+      ['residencial', 'comercial', 'externo'].forEach(b => {
+        const el = document.getElementById('tab_' + b);
+        el.className = (b === setor)
+          ? "py-1.5 px-2 rounded-lg text-xs font-bold border transition flex items-center justify-center gap-1 bg-orange-500 text-slate-950 border-orange-400 shadow"
+          : "py-1.5 px-2 rounded-lg text-xs font-bold border transition flex items-center justify-center gap-1 bg-slate-900 text-slate-300 border-slate-700 hover:bg-slate-800";
+      });
+
+      const selectAmb = document.getElementById('ambiente');
+      selectAmb.innerHTML = '<option value="" selected>-- Selecione o ambiente --</option>';
+      const gruposMap = {};
+      CATALOGO_AMBIENTES[setor].forEach(item => {
+        if (!gruposMap[item.grupo]) {
+          const grp = document.createElement('optgroup');
+          grp.label = item.grupo;
+          gruposMap[item.grupo] = grp;
+          selectAmb.appendChild(grp);
+        }
+        const opt = document.createElement('option');
+        opt.value = item.id;
+        opt.innerText = `${item.nome} [${item.tempPadrao}K]`;
+        gruposMap[item.grupo].appendChild(opt);
+      });
+
+      renderizarBotoesCenarioContextual();
+      if (!manterEmBranco) atualizarTudo();
+    }
+
+    function obterObjetoAmbiente(id) {
+      for (const s in CATALOGO_AMBIENTES) {
+        const achou = CATALOGO_AMBIENTES[s].find(a => a.id === id);
+        if (achou) return achou;
+      }
+      return null;
+    }
+
+    function atualizarAmbiente() {
+      const amb = obterObjetoAmbiente(document.getElementById('ambiente').value);
+      if (amb) {
+        const crit = document.getElementById('criterioLux').value;
+        document.getElementById('luxInput').value = (crit === 'intermediario') ? amb.int : amb.max;
+        definirKelvin(amb.tempPadrao);
+      }
+      renderizarBotoesCenarioContextual();
+      atualizarTudo();
+    }
+
+    function mudarCriterioLux() {
+      if (document.getElementById('ambiente').value) atualizarAmbiente();
+      else atualizarTudo();
+    }
+
+    function alternarEtaManual() {
+      const chk = document.getElementById('chkEtaManual').checked;
+      const etaIn = document.getElementById('etaInput');
+      etaIn.disabled = !chk;
+      etaIn.classList.toggle('opacity-75', !chk);
+      atualizarTudo();
+    }
+
+    function obterCorKelvin(k) {
+      if (k <= 2400) return { bg: "#ff8a00" };
+      if (k <= 2850) return { bg: "#ffb74d" };
+      if (k <= 3400) return { bg: "#ffd584" };
+      if (k <= 4500) return { bg: "#fff3d1" };
+      if (k <= 5600) return { bg: "#e0f2fe" };
+      return { bg: "#93c5fd" };
+    }
+
+    function sincronizarKelvin(origem) {
+      const slider = document.getElementById('tempCorSlider');
+      const input = document.getElementById('tempCorInput');
+      if (origem === 'slider') input.value = slider.value;
+      else if (input.value) slider.value = Math.max(2000, Math.min(6500, parseInt(input.value) || 3000));
+      atualizarTudo();
+    }
+
+    function definirKelvin(valor) {
+      document.getElementById('tempCorSlider').value = valor;
+      document.getElementById('tempCorInput').value = valor;
+      atualizarTudo();
+    }
+
+    function toggleExtratorTexto() {
+      document.getElementById('boxExtratorRegex').classList.toggle('hidden');
+    }
+
+    function extrairDadosDoTextoColado() {
+      const txt = document.getElementById('txtColadoSite').value;
+      if (!txt) return;
+      const matchLm = txt.match(/(\d[\d\.]*)\s*(?:lm|lúmens|lumens|lumen)/i);
+      const matchW = txt.match(/(\d+(?:[\.,]\d+)?)\s*(?:w|watts|watt)\b/i);
+      const matchK = txt.match(/(\d{4})\s*k\b/i);
+      const matchAng = txt.match(/(\d{2,3})\s*(?:°|graus)/i);
+
+      if (matchLm) document.getElementById('lumens').value = matchLm[1].replace(/\./g, '');
+      if (matchW) document.getElementById('watts').value = Math.round(parseFloat(matchW[1].replace(',', '.')));
+      if (matchK) definirKelvin(parseInt(matchK[1]));
+      if (matchAng) document.getElementById('anguloFacho').value = parseInt(matchAng[1]);
+      if (!document.getElementById('qtdLampPorPonto').value) document.getElementById('qtdLampPorPonto').value = 1;
+      document.getElementById('boxExtratorRegex').classList.add('hidden');
+    }
+
+    function limparFormulario() {
+      document.getElementById('nomeProjetoInput').value = "";
+      document.getElementById('ambiente').value = "";
+      document.getElementById('luxInput').value = "";
+      document.getElementById('tempCorInput').value = "";
+      document.getElementById('comp').value = "";
+      document.getElementById('larg').value = "";
+      document.getElementById('peDireito').value = "";
+      document.getElementById('alturaUtilInput').value = "";
+      document.getElementById('presetLuz').value = "";
+      document.getElementById('qtdLampPorPonto').value = "";
+      document.getElementById('lumens').value = "";
+      document.getElementById('watts').value = "";
+      document.getElementById('anguloFacho').value = "";
+      document.getElementById('dimCompPeca').value = "";
+      document.getElementById('dimLargPeca').value = "";
+      document.getElementById('nomeComercialLum').value = "";
+      document.getElementById('linkComercialLum').value = "";
+      verticesSala = [];
+      circuitosAtivos = [];
+      luminariasPlanta = [];
+      cenarioPlanta = [];
+      itemSelecionado = null;
+      renderizarBotoesCenarioContextual();
+      atualizarTudo();
+    }
+
+    function gerarMemorialPDF() {
+      atualizarTudo();
+      window.print();
+    }
+
+    selecionarSetor('residencial', true);
+    limparFormulario();
+  </script>
+</body>
+</html>
