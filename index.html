@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EcoDesign & BaseArq - Estúdio Luminotécnico CAD V3.2</title>
+  <title>EcoDesign & BaseArq - Estúdio Luminotécnico CAD V3.3</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { background-color: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
@@ -27,7 +27,8 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.8), 0 0 0 2px #f97316; cursor: grab;
     }
 
-    #svgForro { user-select: none; -webkit-user-select: none; touch-action: none; }
+    #svgForro { user-select: none; -webkit-user-select: none; touch-action: none; cursor: grab; }
+    #svgForro:active { cursor: grabbing; }
     .cone-calor { mix-blend-mode: screen; pointer-events: none; }
     .handle-vertice { cursor: move; transition: r 0.15s; }
     .handle-vertice:hover { r: 8px; }
@@ -40,48 +41,48 @@
       #appScreenArea, #modalTutorial { display: none !important; }
       #memorialPrintArea { display: block !important; width: 100%; }
       .quebra-pagina-croqui { page-break-before: always; break-before: page; padding-top: 2mm; }
+      /* Proteção para tabelas longas que avançam para a 3ª ou 4ª página */
+      thead { display: table-header-group; }
+      tr { page-break-inside: avoid; break-inside: avoid; }
     }
   </style>
 </head>
 <body class="p-4 md:p-6">
 
   <!-- ========================================================================= -->
-  <!-- MODAL DE TUTORIAL / GUIA RÁPIDO V3.2                                      -->
+  <!-- MODAL DE TUTORIAL / GUIA RÁPIDO V3.3                                      -->
   <!-- ========================================================================= -->
   <div id="modalTutorial" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="card max-w-3xl w-full p-6 border-orange-500/50 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-700 pb-3">
         <div>
-          <span class="text-[10px] font-bold uppercase tracking-widest text-orange-400">Manual do Estúdio Luminotécnico V3.2</span>
-          <h2 class="text-lg font-extrabold text-white">Guia Rápido: Cenário com Sombra & Prancha Executiva de Obra</h2>
+          <span class="text-[10px] font-bold uppercase tracking-widest text-orange-400">Manual do Estúdio Luminotécnico V3.3</span>
+          <h2 class="text-lg font-extrabold text-white">Guia Rápido: Zoom, Pan, Ctrl+Z, Sombras & Prancha de Obra</h2>
         </div>
         <button type="button" onclick="fecharTutorial()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-sm">✕</button>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-300">
         <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
-          <div class="font-bold text-orange-400 text-sm">1. Cenário Adaptativo + Projeção de Sombras</div>
-          <p>Ao escolher um cômodo no Passo 1 (ex: Cozinha, Dormitório, Banheiro, Sala de Jantar), a barra <strong>🛋️ Inserir Cenário</strong> muda automaticamente trazendo os móveis daquele ambiente.</p>
-          <p>Cada móvel possui altura física e <strong>projeta sombra real no piso</strong> conforme a posição das luminárias que você espalhar no teto!</p>
+          <div class="font-bold text-orange-400 text-sm">1. Navegação CAD: Zoom, Pan e Ctrl+Z</div>
+          <p>Use a <strong>roda do mouse (Scroll)</strong> sobre a planta (ou os botões <code>🔍+</code> e <code>🔍−</code>) para dar Zoom nos detalhes.</p>
+          <p>Para <strong>deslizar a planta (Pan)</strong>, basta clicar e arrastar em qualquer área vazia do fundo. Errou um movimento? Aperte <strong>Ctrl+Z</strong> (ou clique em <code>↩️ Desfazer</code>).</p>
         </div>
 
         <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
-          <div class="font-bold text-sky-400 text-sm">2. Prancha Executiva em 2 Páginas (Fit to Page)</div>
-          <p>Ao clicar em <strong>🖨️ Memorial PDF</strong>, o documento agora sai dividido em <strong>2 páginas A4</strong>:</p>
-          <ul class="list-disc list-inside text-[11px] text-slate-400 space-y-0.5">
-            <li><strong>Página 1:</strong> Laudo técnico ABNT + Lista de compras + <strong>Guia Prático para Pedreiro, Gesseiro e Eletricista</strong>.</li>
-            <li><strong>Página 2 (Fit to Page):</strong> Croqui gigante cotado nos eixos externos ($X$ e $Y$) + Tabela de Trena ponto a ponto (<code>P1, P2...</code>).</li>
-          </ul>
+          <div class="font-bold text-sky-400 text-sm">2. Cenário Adaptativo + Projeção de Sombras</div>
+          <p>Ao escolher um cômodo no Passo 1 (Cozinha, Dormitório, Banheiro, Jantar), a barra <strong>🛋️ Inserir Cenário</strong> traz os móveis daquele ambiente.</p>
+          <p>Cada móvel possui altura física e <strong>projeta sombra real no piso</strong> conforme a posição das luminárias no teto!</p>
         </div>
 
         <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
           <div class="font-bold text-emerald-400 text-sm">3. Mover em Grupo ou Individual</div>
-          <p>Use a chave <strong>👆 Mover Individual</strong> (move 1 peça) ou <strong>🔗 Mover Grupo/Circuito</strong> (move todas as peças daquele circuito juntas). Clique com o botão direito para girar 90°.</p>
+          <p>Use a chave <strong>👆 Mover Individual</strong> (move 1 peça) ou <strong>🔗 Mover Grupo</strong> (move todas as peças daquele circuito juntas). Clique com o botão direito sobre uma peça para girá-la 90°.</p>
         </div>
 
         <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
-          <div class="font-bold text-amber-400 text-sm">4. Formatos Irregulares ("L", Trapézio, Polígono)</div>
-          <p>Arraste as bolinhas laranjas nos cantos das paredes para desenhar dentes ou recortes em escala real. O motor recalcula Área, Perímetro e Fator $K$ instantaneamente.</p>
+          <div class="font-bold text-amber-400 text-sm">4. Memorial Multi-Página para Obra</div>
+          <p>O botão <strong>🖨️ Memorial PDF</strong> gera o Laudo e Guia do Pedreiro/Eletricista na Página 1, a Prancha Ampliada na Página 2 e, se houver dezenas de luminárias, pagina a Tabela de Trena automaticamente para a Página 3 repetindo o cabeçalho.</p>
         </div>
       </div>
 
@@ -94,22 +95,28 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- ÁREA 1: INTERFACE DO ESTÚDIO LUMINOTÉCNICO V3.2                           -->
+  <!-- ÁREA 1: INTERFACE DO ESTÚDIO LUMINOTÉCNICO V3.3                           -->
   <!-- ========================================================================= -->
   <div id="appScreenArea" class="max-w-7xl mx-auto space-y-5">
     
-    <!-- HEADER -->
+    <!-- HEADER COM A LOGO OFICIAL DO REPOSITÓRIO -->
     <div class="card p-4 md:p-5 border-l-4 border-l-emerald-500 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
       <div class="flex items-center gap-4">
-        <div class="w-12 h-12 rounded-xl bg-emerald-950 border border-emerald-500/50 flex flex-col items-center justify-center shadow-lg shrink-0">
-          <span class="text-lg font-black tracking-tighter text-emerald-400 leading-none">ECO</span>
-          <span class="text-[8px] font-bold uppercase tracking-widest text-emerald-200 mt-0.5">DESIGN</span>
+        <!-- Quadradinho de 48x48px com a Logo enviada para o GitHub (e fallback automático se offline) -->
+        <div class="w-12 h-12 rounded-xl bg-amber-50/95 border border-emerald-500/60 flex items-center justify-center shadow-lg shrink-0 p-1 overflow-hidden">
+          <img src="Logo_Single_Color_BlackShadow.png" alt="Logo EcoDesign" 
+               class="w-full h-full object-contain"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div style="display:none" class="w-full h-full flex-col items-center justify-center bg-emerald-950 rounded-lg">
+            <span class="text-sm font-black tracking-tighter text-emerald-400 leading-none">ECO</span>
+            <span class="text-[7px] font-bold uppercase tracking-widest text-emerald-200 mt-0.5">DESIGN</span>
+          </div>
         </div>
         <div>
           <div class="flex flex-wrap items-center gap-2">
             <h1 class="text-lg md:text-xl font-extrabold tracking-tight text-white">EcoDesign Interiores e Paisagismo</h1>
             <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-orange-500/20 text-orange-300 border border-orange-500/30">
-              BaseArq® CAD Engine V3.2
+              BaseArq® CAD Engine V3.3
             </span>
           </div>
           <p class="text-xs text-slate-400 mt-0.5">
@@ -128,11 +135,11 @@
         </button>
         <button type="button" onclick="abrirTutorial()" 
                 class="bg-slate-800 hover:bg-slate-700 text-orange-300 border border-orange-500/40 text-xs font-bold px-3 py-1.5 rounded-lg transition">
-          ❓ Guia V3.2
+          ❓ Guia V3.3
         </button>
         <button type="button" onclick="gerarMemorialPDF()" 
                 class="bg-sky-950/80 hover:bg-sky-900 text-sky-200 border border-sky-500/50 text-xs font-bold px-3.5 py-1.5 rounded-lg transition shadow-sm">
-          🖨️ Memorial PDF (2 Págs)
+          🖨️ Gerar Memorial PDF
         </button>
         <button type="button" onclick="limparFormulario()" 
                 class="bg-red-950/60 hover:bg-red-900/80 text-red-200 border border-red-700/60 text-xs font-bold px-3 py-1.5 rounded-lg transition">
@@ -427,7 +434,7 @@
 
       </div>
 
-      <!-- COLUNA DIREITA: LAUDO + PLANTA CAD INTERATIVA COM SOMBRAS E CENÁRIO CONTEXTUAL -->
+      <!-- COLUNA DIREITA: LAUDO + PLANTA CAD INTERATIVA COM ZOOM, PAN E CTRL+Z -->
       <div class="lg:col-span-6 space-y-5">
         
         <!-- LAUDO CONSOLIDADO MULTICIRCUITO -->
@@ -465,22 +472,26 @@
           </div>
         </div>
 
-        <!-- ESTÚDIO GRÁFICO CAD: MAPA DE CALOR, SOMBRAS, COTAS E CENÁRIO CONTEXTUAL -->
+        <!-- ESTÚDIO GRÁFICO CAD: MAPA DE CALOR, SOMBRAS, COTAS, CTRL+Z E ZOOM/PAN -->
         <div class="card p-4 space-y-3.5">
           <div class="flex flex-wrap justify-between items-center gap-2 border-b border-slate-800 pb-2.5">
             <div class="flex flex-wrap items-center gap-1.5">
               <button type="button" id="btnToggleHeatmap" onclick="alternarMapaCalor()" 
-                      class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 shadow transition flex items-center gap-1">
-                🔥 Mapa de Calor: ON
+                      class="px-2 py-1.5 rounded-lg text-[11px] font-bold bg-amber-500 text-slate-950 shadow transition flex items-center gap-1">
+                🔥 Calor: ON
               </button>
               <button type="button" id="btnToggleCotas" onclick="alternarCotasVisuais()" 
-                      class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-sky-500/20 text-sky-300 border border-sky-500/40 transition flex items-center gap-1">
-                📏 Cotas & Eixos: ON
+                      class="px-2 py-1.5 rounded-lg text-[11px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/40 transition flex items-center gap-1">
+                📏 Cotas: ON
               </button>
               <button type="button" id="btnToggleSombras" onclick="alternarSombrasCenario()" 
-                      class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40 transition flex items-center gap-1"
-                      title="Projeta a sombra dos móveis no piso conforme a direção das luminárias">
+                      class="px-2 py-1.5 rounded-lg text-[11px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40 transition flex items-center gap-1">
                 🌗 Sombras: ON
+              </button>
+              <button type="button" id="btnUndo" onclick="desfazerUltimaAcao()" disabled
+                      class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 disabled:opacity-40 transition flex items-center gap-1"
+                      title="Desfazer última alteração na planta (Atalho: Ctrl+Z)">
+                ↩️ Desfazer (Ctrl+Z)
               </button>
             </div>
 
@@ -488,29 +499,28 @@
             <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-lg border border-slate-700">
               <button type="button" id="btnArrasteIndiv" onclick="definirModoArraste('individual')" 
                       class="px-2 py-1 rounded text-[11px] font-bold bg-orange-500 text-slate-950 transition">
-                👆 Mover Individual
+                👆 Individual
               </button>
               <button type="button" id="btnArrasteGrupo" onclick="definirModoArraste('grupo')" 
                       class="px-2 py-1 rounded text-[11px] font-bold text-slate-300 hover:bg-slate-800 transition">
-                🔗 Mover Grupo
+                🔗 Grupo
               </button>
             </div>
           </div>
 
-          <!-- BARRA DINÂMICA DE CENÁRIO / MOBILIÁRIO (ADAPTA AO CÔMODO SELECIONADO + SOMBRA) -->
+          <!-- BARRA DINÂMICA DE CENÁRIO / MOBILIÁRIO -->
           <div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-800 space-y-2 text-[11px]">
             <div class="flex justify-between items-center">
               <span id="lblTituloCenario" class="text-emerald-300 font-semibold">🛋️ Inserir Cenário do Ambiente (Com Projeção de Sombra):</span>
               <span class="text-[10px] text-slate-400">Muda conforme o cômodo do Passo 1</span>
             </div>
-            <div id="barraBotoesCenario" class="flex flex-wrap items-center gap-1.5">
-            </div>
+            <div id="barraBotoesCenario" class="flex flex-wrap items-center gap-1.5"></div>
           </div>
 
           <!-- Painel de Inspeção do Item Selecionado -->
           <div id="barraInspecaoPeca" class="bg-slate-950/90 px-3 py-2 rounded-xl border border-slate-800 flex flex-wrap justify-between items-center gap-2 text-xs">
             <div id="txtInspecaoPeca" class="text-slate-400">
-              💡 Clique ou arraste qualquer luminária (<code>P1, P2...</code>), móvel ou canto de parede na planta abaixo.
+              💡 Clique numa peça (<code>P1, P2...</code>) para cotar/mover, ou arraste o fundo vazio para deslizar a tela.
             </div>
             <div id="acoesPecaSelecionada" class="hidden items-center gap-1.5">
               <button type="button" onclick="girarItemSelecionado()" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-sky-300 border border-sky-500/40 font-bold text-[11px]">
@@ -525,13 +535,22 @@
             </div>
           </div>
 
-          <!-- CANVAS VETORIAL SVG INTERATIVO -->
+          <!-- CANVAS VETORIAL SVG INTERATIVO COM CONTROLES FLUTUANTES DE ZOOM & PAN -->
           <div class="flex flex-col items-center justify-center bg-slate-950 p-3 rounded-xl border border-slate-800 relative">
+            
+            <!-- Botões Flutuantes de Zoom e Centralização -->
+            <div class="absolute top-5 right-5 z-10 flex items-center gap-1 bg-slate-900/90 backdrop-blur px-2 py-1 rounded-lg border border-slate-700 shadow-lg text-xs">
+              <button type="button" onclick="aplicarZoomCanvas(1.25)" class="px-2 py-0.5 rounded hover:bg-slate-800 text-sky-300 font-bold" title="Aproximar (Zoom In)">🔍+</button>
+              <span id="lblNivelZoom" class="text-[10px] font-mono text-slate-300 px-1">100%</span>
+              <button type="button" onclick="aplicarZoomCanvas(0.8)" class="px-2 py-0.5 rounded hover:bg-slate-800 text-sky-300 font-bold" title="Afastar (Zoom Out)">🔍−</button>
+              <button type="button" onclick="resetarCameraSVG()" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-orange-300 text-[10px] font-bold ml-1" title="Centralizar Planta (100%)">🎯 100%</button>
+            </div>
+
             <svg id="svgForro" width="540" height="440" viewBox="0 0 540 440" class="w-full max-w-[540px] h-auto rounded bg-slate-950"></svg>
             
             <div class="w-full flex flex-wrap justify-between items-center text-[11px] text-slate-400 mt-2 px-1 gap-2">
-              <span id="legendaForro">Planta Vetorial em Escala com Eixos Cotados</span>
-              <span id="lblInfoCone" class="text-amber-300 font-semibold">Cones e sombras ativos</span>
+              <span id="legendaForro">Scroll do mouse = Zoom • Arrastar fundo vazio = Deslizar (Pan)</span>
+              <span id="lblInfoCone" class="text-amber-300 font-semibold">Ctrl+Z ativo</span>
             </div>
           </div>
         </div>
@@ -541,34 +560,40 @@
 
     <footer class="border-t border-slate-800 pt-4 pb-2 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500 gap-2">
       <div><strong class="text-emerald-400">EcoDesign Interiores e Paisagismo</strong> • Direção Técnica: Adriano Sanches Pastre</div>
-      <div>Tecnologia & Motor Matemático: <strong class="text-orange-400">BaseArq® SaaS Platform V3.2</strong> • Todos os direitos reservados</div>
+      <div>Tecnologia & Motor Matemático: <strong class="text-orange-400">BaseArq® SaaS Platform V3.3</strong> • Todos os direitos reservados</div>
     </footer>
   </div>
 
   <!-- ========================================================================= -->
-  <!-- ÁREA 2: MEMORIAL EXECUTIVO A4 EM 2 PÁGINAS (AMIGÁVEL PARA OBRA/PEDREIRO)  -->
+  <!-- ÁREA 2: MEMORIAL EXECUTIVO A4 MULTI-PÁGINA (COM REPETIÇÃO DE CABEÇALHO)   -->
   <!-- ========================================================================= -->
   <div id="memorialPrintArea" class="text-slate-900 font-sans">
     
-    <!-- ==================== PÁGINA 1: MEMORIAL + GUIA DE OBRA ==================== -->
+    <!-- ==================== SEÇÃO 1: MEMORIAL + GUIA DE OBRA ==================== -->
     <div>
-      <!-- Cabeçalho Página 1 -->
-      <div class="border-b-4 border-emerald-700 pb-3 mb-4 flex justify-between items-end bg-slate-50 p-3 rounded-t-lg">
-        <div>
-          <span class="text-[10px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">
-            Folha 01/02 • Memorial Técnico & Guia de Instalação na Obra
-          </span>
-          <h1 class="text-xl font-black text-slate-900 mt-1">EcoDesign Interiores e Paisagismo</h1>
-          <p class="text-xs text-slate-600">Responsável Técnico: Adriano Sanches Pastre • Norma: ABNT NBR ISO/CIE 8995-1:2013</p>
+      <!-- Cabeçalho com a Logo Oficial -->
+      <div class="border-b-4 border-emerald-700 pb-3 mb-4 flex justify-between items-center bg-slate-50 p-3 rounded-t-lg">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-white border border-slate-300 flex items-center justify-center p-1 shrink-0">
+            <img src="Logo_Single_Color_BlackShadow.png" alt="Logo EcoDesign" class="w-full h-full object-contain"
+                 onerror="this.style.display='none';">
+          </div>
+          <div>
+            <span class="text-[10px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">
+              Seção 01 • Memorial Técnico & Guia de Instalação na Obra
+            </span>
+            <h1 class="text-xl font-black text-slate-900 mt-1">EcoDesign Interiores e Paisagismo</h1>
+            <p class="text-xs text-slate-600">Responsável Técnico: Adriano Sanches Pastre • Norma: ABNT NBR ISO/CIE 8995-1:2013</p>
+          </div>
         </div>
         <div class="text-right text-xs">
           <div class="text-sm font-bold text-slate-900" id="prtProjeto">Estudo Luminotécnico</div>
           <div><strong>Emissão:</strong> <span id="prtData">--/--/----</span></div>
-          <div class="text-[10px] text-orange-700 font-bold mt-0.5">BaseArq® CAD Engine V3.2</div>
+          <div class="text-[10px] text-orange-700 font-bold mt-0.5">BaseArq® CAD Engine V3.3</div>
         </div>
       </div>
 
-      <!-- Cartões de Resumo Visual Rápido (Para Cliente e Mestre de Obras) -->
+      <!-- Cartões de Resumo Visual Rápido -->
       <div class="grid grid-cols-4 gap-2.5 mb-4 text-center">
         <div class="border-2 border-slate-300 rounded-lg p-2 bg-slate-50">
           <span class="text-[10px] uppercase font-bold text-slate-500 block">Área & Pé-Direito</span>
@@ -592,7 +617,7 @@
         </div>
       </div>
 
-      <!-- Seção 1: Parâmetros Geométricos, Fotométricos e Normativos -->
+      <!-- Quadro 1: Parâmetros Geométricos, Fotométricos e Normativos -->
       <div class="mb-4">
         <h2 class="text-xs font-bold uppercase tracking-wider bg-slate-200 px-2.5 py-1.5 border-l-4 border-slate-900 mb-2">
           1. Parâmetros Geométricos, Fotométricos e Normativos do Recinto (ABNT NBR ISO/CIE 8995-1)
@@ -627,7 +652,7 @@
         </table>
       </div>
 
-      <!-- Seção 2: Quadro Quantitativo de Compras e Especificação -->
+      <!-- Quadro 2: Lista de Materiais -->
       <div class="mb-4">
         <h2 class="text-xs font-bold uppercase tracking-wider bg-slate-200 px-2.5 py-1.5 border-l-4 border-slate-900 mb-2">
           2. Lista de Materiais, Circuitos de Iluminação e Especificação de Compras
@@ -648,7 +673,7 @@
         </table>
       </div>
 
-      <!-- Seção 3: Guia Prático para Obra (Pedreiro, Gesseiro e Eletricista) -->
+      <!-- Quadro 3: Guia Prático para Obra -->
       <div class="mb-2">
         <h2 class="text-xs font-bold uppercase tracking-wider bg-amber-100 text-amber-950 px-2.5 py-1.5 border-l-4 border-amber-600 mb-2">
           3. Instruções Práticas para Execução na Obra (Gesseiro, Eletricista e Pedreiro)
@@ -657,9 +682,9 @@
           <div class="border border-slate-300 rounded-lg p-3 bg-slate-50 space-y-1.5">
             <div class="font-extrabold text-slate-900">📏 Como Marcar os Pontos no Forro (Gesseiro / Pedreiro):</div>
             <p class="text-[11px] text-slate-700 leading-relaxed">
-              1. Na <strong>Folha 02/02 (Próxima Página)</strong>, cada luminária está numerada como <strong>P1, P2, P3...</strong><br>
+              1. Na <strong>Seção 02 (Próxima Página)</strong>, cada luminária está numerada como <strong>P1, P2, P3...</strong><br>
               2. O <strong>Ponto Zero (0,00 m)</strong> fica no <strong>Canto Superior Esquerdo</strong> da planta.<br>
-              3. Estique a trena a partir da <strong>Parede Esquerda (Cota X)</strong> e a partir da <strong>Parede Superior/Fundo (Cota Y)</strong> conforme a tabela da Folha 02 para marcar o centro exato de furação de cada peça.<br>
+              3. Puxe a trena a partir da <strong>Parede Esquerda (Cota X)</strong> e da <strong>Parede Superior/Fundo (Cota Y)</strong> conforme a tabela da Seção 02 para marcar o centro exato de furação de cada peça.<br>
               4. Confira o tamanho físico da peça antes de abrir o recorte no gesso.
             </p>
           </div>
@@ -673,28 +698,28 @@
       </div>
     </div>
 
-    <!-- ==================== PÁGINA 2: CROQUI EXECUTIVO AMPLIADO (FIT TO PAGE) + TABELA DE TRENA ==================== -->
+    <!-- ==================== SEÇÃO 2: CROQUI EXECUTIVO AMPLIADO + TABELA DE TRENA MULTI-PÁGINA ==================== -->
     <div class="quebra-pagina-croqui">
       <div class="border-b-2 border-slate-900 pb-2 mb-3 flex justify-between items-center">
         <div>
           <span class="text-[10px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded bg-slate-200 text-slate-900">
-            Folha 02/02 • Prancha Executiva de Forro Ampliada (Fit to Page)
+            Seção 02 • Prancha Executiva de Forro Ampliada (Fit to Page) & Gabarito de Trena
           </span>
           <h2 class="text-base font-black text-slate-900 mt-0.5" id="prtTituloFolha2">Planta de Marcação de Forro, Cotas de Eixo e Cones de Luz</h2>
         </div>
         <div class="text-right text-[11px] text-slate-600">
           <div><strong>Referência (0,00m):</strong> Canto Superior Esquerdo</div>
-          <div><strong>EcoDesign Interiores e Paisagismo</strong> • BaseArq® V3.2</div>
+          <div><strong>EcoDesign Interiores e Paisagismo</strong> • BaseArq® V3.3</div>
         </div>
       </div>
 
-      <!-- CROQUI AMPLIADO FIT TO PAGE -->
+      <!-- CROQUI AMPLIADO FIT TO PAGE (SEMPRE EM 100% ENQUADRADO, INDEPENDENTE DO ZOOM DA TELA) -->
       <div class="border-2 border-slate-900 rounded-lg p-2 bg-white flex flex-col items-center justify-center mb-3">
-        <svg id="svgForroPrint" width="760" height="540" viewBox="0 0 760 540" class="w-full h-auto max-h-[155mm]"></svg>
+        <svg id="svgForroPrint" width="760" height="540" viewBox="0 0 760 540" class="w-full h-auto max-h-[150mm]"></svg>
         <p id="prtLegendaForro" class="text-[10px] text-slate-700 font-mono mt-1 text-center font-semibold"></p>
       </div>
 
-      <!-- TABELA DE LOCAÇÃO NA TRENA (PARA O PEDREIRO / GESSEIRO NÃO TER DÚVIDA) -->
+      <!-- TABELA DE LOCAÇÃO NA TRENA (SE PASSAR PARA A 3ª PÁGINA, REPETE O CABEÇALHO AUTOMATICAMENTE) -->
       <div>
         <h3 class="text-xs font-bold uppercase tracking-wider bg-emerald-100 text-emerald-950 px-2.5 py-1 border-l-4 border-emerald-700 mb-1.5">
           4. Gabarito de Marcação na Trena (Coordenadas Exatas Ponto a Ponto no Teto)
@@ -743,7 +768,6 @@
       ]
     };
 
-    // CATÁLOGO DE CENÁRIO CONTEXTUAL POR CÔMODO (COM ALTURA FÍSICA 'h' PARA PROJEÇÃO DE SOMBRA!)
     const CENARIO_POR_AMBIENTE = {
       res_sala_estar: [
         { icone: "🛋️", nome: "Sofá 3 Lugares",   comp: 2.30, larg: 0.95, h: 0.85, forma: "ret" },
@@ -819,6 +843,12 @@
     let luminariasPlanta = [];
     let cenarioPlanta = [];
 
+    // Pilha de Histórico para Ctrl+Z (Undo)
+    let historicoUndo = [];
+
+    // Estado da Câmera SVG (Zoom & Pan)
+    let cameraSVG = { zoom: 1.0, panX: 0, panY: 0 };
+
     let itemSelecionado = null;
     let arrastando = null;
     let transformView = { offsetX: 60, offsetY: 50, scale: 40, C: 4.5, L: 9.4 };
@@ -832,6 +862,79 @@
 
     function abrirTutorial() { document.getElementById('modalTutorial').classList.remove('hidden'); }
     function fecharTutorial() { document.getElementById('modalTutorial').classList.add('hidden'); }
+
+    // =========================================================================
+    // SISTEMA DE HISTÓRICO (CTRL+Z / UNDO) E CÂMERA (ZOOM & PAN)
+    // =========================================================================
+    function salvarEstadoParaUndo() {
+      const snapshot = JSON.stringify({
+        formatoSala: document.getElementById('formatoSalaSelect').value,
+        comp: document.getElementById('comp').value,
+        larg: document.getElementById('larg').value,
+        verticesSala,
+        circuitosAtivos,
+        luminariasPlanta,
+        cenarioPlanta
+      });
+      // Evita duplicar estados idênticos consecutivos
+      if (historicoUndo.length > 0 && historicoUndo[historicoUndo.length - 1] === snapshot) return;
+      historicoUndo.push(snapshot);
+      if (historicoUndo.length > 35) historicoUndo.shift();
+      atualizarBotaoUndo();
+    }
+
+    function desfazerUltimaAcao() {
+      if (historicoUndo.length === 0) return;
+      const anterior = JSON.parse(historicoUndo.pop());
+      document.getElementById('formatoSalaSelect').value = anterior.formatoSala;
+      document.getElementById('comp').value = anterior.comp;
+      document.getElementById('larg').value = anterior.larg;
+      verticesSala = anterior.verticesSala || [];
+      circuitosAtivos = anterior.circuitosAtivos || [];
+      luminariasPlanta = anterior.luminariasPlanta || [];
+      cenarioPlanta = anterior.cenarioPlanta || [];
+      itemSelecionado = null;
+      atualizarBotaoUndo();
+      atualizarTudo();
+    }
+
+    function atualizarBotaoUndo() {
+      const btn = document.getElementById('btnUndo');
+      if (btn) btn.disabled = (historicoUndo.length === 0);
+    }
+
+    // Atalho global Ctrl+Z
+    window.addEventListener('keydown', (e) => {
+      const tag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
+      if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+        e.preventDefault();
+        desfazerUltimaAcao();
+      }
+    });
+
+    function atualizarViewBoxCamera() {
+      const svg = document.getElementById('svgForro');
+      if (!svg) return;
+      const W_BASE = 540, H_BASE = 440;
+      const wView = W_BASE / cameraSVG.zoom;
+      const hView = H_BASE / cameraSVG.zoom;
+      const xView = ((W_BASE - wView) / 2) + cameraSVG.panX;
+      const yView = ((H_BASE - hView) / 2) + cameraSVG.panY;
+      svg.setAttribute('viewBox', `${xView.toFixed(1)} ${yView.toFixed(1)} ${wView.toFixed(1)} ${hView.toFixed(1)}`);
+      const lbl = document.getElementById('lblNivelZoom');
+      if (lbl) lbl.innerText = `${Math.round(cameraSVG.zoom * 100)}%`;
+    }
+
+    function aplicarZoomCanvas(fator) {
+      cameraSVG.zoom = Math.max(0.6, Math.min(4.5, +(cameraSVG.zoom * fator).toFixed(2)));
+      atualizarViewBoxCamera();
+    }
+
+    function resetarCameraSVG() {
+      cameraSVG = { zoom: 1.0, panX: 0, panY: 0 };
+      atualizarViewBoxCamera();
+    }
 
     // =========================================================================
     // BARRA DINÂMICA DE CENÁRIO CONFORME O CÔMODO SELECIONADO
@@ -863,6 +966,7 @@
     }
 
     function inserirItemCenarioContextual(idx) {
+      salvarEstadoParaUndo();
       let C = lerNum('comp', 4.50);
       let L = lerNum('larg', 9.40);
       if (!lerNum('comp')) {
@@ -919,6 +1023,7 @@
     }
 
     function mudarFormatoSala() {
+      salvarEstadoParaUndo();
       const C = lerNum('comp', 4.50);
       const L = lerNum('larg', 9.40);
       const form = document.getElementById('formatoSalaSelect').value;
@@ -940,6 +1045,7 @@
     }
 
     function adicionarVerticePoligono() {
+      salvarEstadoParaUndo();
       if (verticesSala.length < 3) {
         const C = lerNum('comp', 4.50);
         const L = lerNum('larg', 9.40);
@@ -1033,6 +1139,7 @@
     }
 
     function inserirCircuitoNoAmbiente(modoDistribuicao) {
+      salvarEstadoParaUndo();
       let C = lerNum('comp', 0);
       let L = lerNum('larg', 0);
       let A = lerNum('alturaUtilInput', 0);
@@ -1125,15 +1232,15 @@
     }
 
     // =========================================================================
-    // 3. INTERAÇÃO DE SELEÇÃO, ROTAÇÃO, EXCLUSÃO E DRAG-AND-DROP
+    // 3. INTERAÇÃO DE SELEÇÃO, ROTAÇÃO, EXCLUSÃO, DRAG-AND-DROP E PAN
     // =========================================================================
     function alternarMapaCalor() {
       mostrarMapaCalor = !mostrarMapaCalor;
       const btn = document.getElementById('btnToggleHeatmap');
       btn.className = mostrarMapaCalor
-        ? "px-2.5 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 shadow transition flex items-center gap-1"
-        : "px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-400 border border-slate-700 transition flex items-center gap-1";
-      btn.innerText = mostrarMapaCalor ? "🔥 Mapa de Calor: ON" : "🔥 Mapa de Calor: OFF";
+        ? "px-2 py-1.5 rounded-lg text-[11px] font-bold bg-amber-500 text-slate-950 shadow transition flex items-center gap-1"
+        : "px-2 py-1.5 rounded-lg text-[11px] font-bold bg-slate-800 text-slate-400 border border-slate-700 transition flex items-center gap-1";
+      btn.innerText = mostrarMapaCalor ? "🔥 Calor: ON" : "🔥 Calor: OFF";
       atualizarTudo();
     }
 
@@ -1141,9 +1248,9 @@
       mostrarCotasVisuais = !mostrarCotasVisuais;
       const btn = document.getElementById('btnToggleCotas');
       btn.className = mostrarCotasVisuais
-        ? "px-2.5 py-1.5 rounded-lg text-xs font-bold bg-sky-500/20 text-sky-300 border border-sky-500/40 transition flex items-center gap-1"
-        : "px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-400 border border-slate-700 transition flex items-center gap-1";
-      btn.innerText = mostrarCotasVisuais ? "📏 Cotas & Eixos: ON" : "📏 Cotas & Eixos: OFF";
+        ? "px-2 py-1.5 rounded-lg text-[11px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/40 transition flex items-center gap-1"
+        : "px-2 py-1.5 rounded-lg text-[11px] font-bold bg-slate-800 text-slate-400 border border-slate-700 transition flex items-center gap-1";
+      btn.innerText = mostrarCotasVisuais ? "📏 Cotas: ON" : "📏 Cotas: OFF";
       atualizarTudo();
     }
 
@@ -1151,8 +1258,8 @@
       mostrarSombras = !mostrarSombras;
       const btn = document.getElementById('btnToggleSombras');
       btn.className = mostrarSombras
-        ? "px-2.5 py-1.5 rounded-lg text-xs font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40 transition flex items-center gap-1"
-        : "px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-400 border border-slate-700 transition flex items-center gap-1";
+        ? "px-2 py-1.5 rounded-lg text-[11px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40 transition flex items-center gap-1"
+        : "px-2 py-1.5 rounded-lg text-[11px] font-bold bg-slate-800 text-slate-400 border border-slate-700 transition flex items-center gap-1";
       btn.innerText = mostrarSombras ? "🌗 Sombras: ON" : "🌗 Sombras: OFF";
       atualizarTudo();
     }
@@ -1169,6 +1276,7 @@
 
     function girarItemSelecionado() {
       if (!itemSelecionado) return;
+      salvarEstadoParaUndo();
       if (itemSelecionado.tipo === 'luminaria') {
         if (modoArraste === 'grupo') {
           luminariasPlanta.filter(l => l.circuitoId === itemSelecionado.circuitoId).forEach(l => l.rot = !l.rot);
@@ -1185,6 +1293,7 @@
 
     function duplicarItemSelecionado() {
       if (!itemSelecionado) return;
+      salvarEstadoParaUndo();
       if (itemSelecionado.tipo === 'luminaria') {
         const lum = luminariasPlanta.find(l => l.id === itemSelecionado.id);
         if (lum) {
@@ -1205,6 +1314,7 @@
 
     function excluirItemSelecionado() {
       if (!itemSelecionado) return;
+      salvarEstadoParaUndo();
       if (itemSelecionado.tipo === 'luminaria') {
         luminariasPlanta = luminariasPlanta.filter(l => l.id !== itemSelecionado.id);
         limparCircuitosVazios();
@@ -1218,6 +1328,7 @@
     }
 
     function excluirCircuitoInteiro(circId) {
+      salvarEstadoParaUndo();
       luminariasPlanta = luminariasPlanta.filter(l => l.circuitoId !== circId);
       circuitosAtivos = circuitosAtivos.filter(c => c.id !== circId);
       if (itemSelecionado && itemSelecionado.circuitoId === circId) itemSelecionado = null;
@@ -1225,6 +1336,7 @@
     }
 
     function girarCircuitoInteiro(circId) {
+      salvarEstadoParaUndo();
       luminariasPlanta.filter(l => l.circuitoId === circId).forEach(l => l.rot = !l.rot);
       atualizarTudo();
     }
@@ -1248,6 +1360,7 @@
 
     function iniciarArrasteSVG(evt, tipo, idOuIdx, circuitoId = null) {
       evt.stopPropagation();
+      salvarEstadoParaUndo();
       const posM = obterCoordenadaMetrosNoSVG(evt);
 
       if (tipo === 'luminaria') {
@@ -1273,8 +1386,44 @@
       atualizarTudo();
     }
 
+    // Configurar Pan (Deslizar ao arrastar o fundo) e Zoom (Roda do Mouse) no SVG
+    function configurarEventosCameraSVG() {
+      const svg = document.getElementById('svgForro');
+      if (!svg) return;
+
+      svg.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const fator = e.deltaY < 0 ? 1.15 : 0.87;
+        aplicarZoomCanvas(fator);
+      }, { passive: false });
+
+      svg.addEventListener('pointerdown', (e) => {
+        // Se clicou no fundo vazio do SVG, inicia o Pan (deslizar a planta)
+        if (e.target === svg || e.target.getAttribute('data-bg-pan') === 'true') {
+          arrastando = {
+            tipo: 'pan_camera',
+            startClientX: e.clientX,
+            startClientY: e.clientY,
+            panX0: cameraSVG.panX,
+            panY0: cameraSVG.panY
+          };
+        }
+      });
+    }
+
     window.addEventListener('pointermove', (evt) => {
       if (!arrastando) return;
+
+      if (arrastando.tipo === 'pan_camera') {
+        const svg = document.getElementById('svgForro');
+        const rect = svg.getBoundingClientRect();
+        const fatorPx = (540 / cameraSVG.zoom) / Math.max(1, rect.width);
+        cameraSVG.panX = arrastando.panX0 - (evt.clientX - arrastando.startClientX) * fatorPx;
+        cameraSVG.panY = arrastando.panY0 - (evt.clientY - arrastando.startClientY) * fatorPx;
+        atualizarViewBoxCamera();
+        return;
+      }
+
       const posM = obterCoordenadaMetrosNoSVG(evt);
       const C = transformView.C;
       const L = transformView.L;
@@ -1460,7 +1609,7 @@
       const boxBtn = document.getElementById('acoesPecaSelecionada');
 
       if (!itemSelecionado) {
-        txt.innerHTML = "💡 Clique ou arraste qualquer luminária (<code>P1, P2...</code>), móvel ou canto de parede na planta abaixo.";
+        txt.innerHTML = "💡 Clique numa peça (<code>P1, P2...</code>) para cotar/mover, ou arraste o fundo vazio para deslizar a tela.";
         boxBtn.classList.add('hidden');
         boxBtn.classList.remove('flex');
         return;
@@ -1492,7 +1641,6 @@
     // 5. MOTOR VETORIAL SVG (PLANTA + SOMBRAS + CONES + EIXOS COTADOS EXTERNOS)
     // =========================================================================
     function calcularVetorSombraMobiliario(mob, pdTotal) {
-      // Calcula o vetor de sombra projetada no piso a partir das luminárias mais próximas (ou luz zenital leve se não houver luzes)
       const hMob = mob.h || 0.80;
       const hLuz = Math.max(hMob + 0.35, pdTotal || 2.70);
       const fatorAltura = Math.min(0.55, (hMob / (hLuz - hMob * 0.6)) * 0.22);
@@ -1530,7 +1678,6 @@
       const form = document.getElementById('formatoSalaSelect').value;
       if (verticesSala.length < 3) verticesSala = construirPoligonoPadrao(form, C, L);
 
-      // No modoPrint (Página 2 Fit to Page), usamos um canvas amplo 760x540 com margens generosas para cotas de eixo!
       const W_SVG = modoPrint ? 760 : 540;
       const H_SVG = modoPrint ? 540 : 440;
       const PAD_LEFT = modoPrint ? 92 : 64;
@@ -1544,7 +1691,12 @@
       const offsetX = PAD_LEFT + ((W_SVG - PAD_LEFT - PAD_RIGHT) - maxX * scale) / 2;
       const offsetY = PAD_TOP + ((H_SVG - PAD_TOP - PAD_BOTTOM) - maxY * scale) / 2;
 
-      if (!modoPrint) transformView = { offsetX, offsetY, scale, C: maxX, L: maxY };
+      if (!modoPrint) {
+        transformView = { offsetX, offsetY, scale, C: maxX, L: maxY };
+        atualizarViewBoxCamera();
+      } else {
+        svgEl.setAttribute('viewBox', `0 0 ${W_SVG} ${H_SVG}`);
+      }
 
       const mx = (xm) => offsetX + xm * scale;
       const my = (ym) => offsetY + ym * scale;
@@ -1552,7 +1704,6 @@
       const kStyle = obterCorKelvin(kelvinNum);
       const pdTotal = lerNum('peDireito', 2.70);
 
-      // Definições SVG: ClipPath da Sala + Filtro de Sombra + Gradientes Radiais
       const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
       const clipRoom = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
       const clipId = modoPrint ? "clipSalaPrt" : "clipSalaScreen";
@@ -1588,7 +1739,7 @@
       });
       svgEl.appendChild(defs);
 
-      // 1. DESENHO DO PISO/FORRO DO RECINTO
+      // 1. DESENHO DO PISO/FORRO DO RECINTO (Permite Pan ao arrastar no fundo)
       const corFundoSala = modoPrint ? "#ffffff" : "#0f172a";
       const corParede = modoPrint ? "#0f172a" : "#94a3b8";
 
@@ -1599,6 +1750,7 @@
         roomEl.setAttribute("fill", corFundoSala);
         roomEl.setAttribute("stroke", corParede);
         roomEl.setAttribute("stroke-width", modoPrint ? "3" : "2.5");
+        roomEl.setAttribute("data-bg-pan", "true");
         svgEl.appendChild(roomEl);
       } else {
         const roomPoly = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
@@ -1606,10 +1758,11 @@
         roomPoly.setAttribute("fill", corFundoSala);
         roomPoly.setAttribute("stroke", corParede);
         roomPoly.setAttribute("stroke-width", modoPrint ? "3" : "2.5");
+        roomPoly.setAttribute("data-bg-pan", "true");
         svgEl.appendChild(roomPoly);
       }
 
-      // Marcador do Ponto Zero (0,00m) no Canto Superior Esquerdo para o Pedreiro/Gesseiro
+      // Marcador do Ponto Zero (0,00m) no Canto Superior Esquerdo
       const gZero = document.createElementNS("http://www.w3.org/2000/svg", "g");
       const zeroDot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
       zeroDot.setAttribute("cx", mx(0)); zeroDot.setAttribute("cy", my(0));
@@ -1629,7 +1782,7 @@
       gClipped.setAttribute("clip-path", `url(#${clipId})`);
       svgEl.appendChild(gClipped);
 
-      // 2. DESENHO DO CENÁRIO / MOBILIÁRIO + PROJEÇÃO DE SOMBRAS NO PISO!
+      // 2. DESENHO DO CENÁRIO / MOBILIÁRIO + PROJEÇÃO DE SOMBRAS NO PISO
       cenarioPlanta.forEach(mob => {
         const wPx = (mob.rot ? mob.larg : mob.comp) * scale;
         const hPx = (mob.rot ? mob.comp : mob.larg) * scale;
@@ -1642,7 +1795,6 @@
           gMob.onpointerdown = (e) => iniciarArrasteSVG(e, 'cenario', mob.id);
         }
 
-        // 2A. PROJEÇÃO DE SOMBRA DINÂMICA DO MÓVEL (Calculada conforme as luzes do teto!)
         if (mostrarSombras) {
           const vetSombra = calcularVetorSombraMobiliario(mob, pdTotal);
           const sdx = vetSombra.dx * scale;
@@ -1658,9 +1810,7 @@
             sombraEl.setAttribute("fill-opacity", modoPrint ? "0.35" : "0.68");
             gMob.appendChild(sombraEl);
           } else {
-            // Polígono volumétrico conectando a base do móvel à sombra projetada
             const x1 = cx - wPx / 2, y1 = cy - hPx / 2;
-            const x2 = cx + wPx / 2, y2 = cy + hPx / 2;
             const sombraRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
             sombraRect.setAttribute("x", x1 + sdx);
             sombraRect.setAttribute("y", y1 + sdy);
@@ -1673,7 +1823,6 @@
           }
         }
 
-        // 2B. CORPO DO MÓVEL
         if (mob.forma === 'oval') {
           const el = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
           el.setAttribute("cx", cx); el.setAttribute("cy", cy);
@@ -1738,12 +1887,11 @@
         });
       }
 
-      // 4. SISTEMA DE EIXOS DE OBRA E COTAS CLARAS (SEM POLUIÇÃO VISUAL!)
+      // 4. SISTEMA DE EIXOS DE OBRA E COTAS CLARAS
       if (mostrarCotasVisuais) {
         const gCotas = document.createElementNS("http://www.w3.org/2000/svg", "g");
         gCotas.setAttribute("pointer-events", "none");
 
-        // 4A. Cotas das paredes nas bordas externas inferiores/direitas
         if (form === 'elipse') {
           desenharEtiquetaCota(gCotas, mx(C / 2), my(L) + 22, `Largura Total: ${C.toFixed(2)}m`, modoPrint ? "#0f172a" : "#cbd5e1", modoPrint);
           desenharEtiquetaCota(gCotas, mx(C) + 32, my(L / 2), `Comp. Total: ${L.toFixed(2)}m`, modoPrint ? "#0f172a" : "#cbd5e1", modoPrint);
@@ -1763,8 +1911,6 @@
           }
         }
 
-        // 4B. LINHAS DE EIXO COTADAS NAS MARGENS (TOPO = EIXOS X | ESQUERDA = EIXOS Y)
-        // Agrupa coordenadas X e Y únicas (tolerância de 6cm) para criar uma régua de marcação limpa para o pedreiro!
         const eixosX = extrairEixosUnicos(luminariasPlanta.map(l => l.x), 0.08);
         const eixosY = extrairEixosUnicos(luminariasPlanta.map(l => l.y), 0.08);
 
@@ -1778,7 +1924,6 @@
           line.setAttribute("stroke-dasharray", "3,3");
           gCotas.appendChild(line);
 
-          // Etiqueta de distância X acumulada a partir da Parede Esquerda (no topo)
           desenharEtiquetaCota(gCotas, px, offsetY - 22, `X:${xVal.toFixed(2)}m`, modoPrint ? "#0369a1" : "#38bdf8", modoPrint, modoPrint ? "9.5" : "8.5");
         });
 
@@ -1792,11 +1937,9 @@
           line.setAttribute("stroke-dasharray", "3,3");
           gCotas.appendChild(line);
 
-          // Etiqueta de distância Y acumulada a partir da Parede Superior (na esquerda)
           desenharEtiquetaCota(gCotas, offsetX - 34, py, `Y:${yVal.toFixed(2)}m`, modoPrint ? "#0369a1" : "#38bdf8", modoPrint, modoPrint ? "9.5" : "8.5");
         });
 
-        // 4C. Na tela interativa, destaca a cota entre eixos para a peça selecionada
         if (!modoPrint && itemSelecionado && itemSelecionado.tipo === 'luminaria') {
           const lumFoco = luminariasPlanta.find(l => l.id === itemSelecionado.id);
           if (lumFoco) {
@@ -1833,7 +1976,7 @@
         if (!modoPrint) {
           gLum.style.cursor = "grab";
           gLum.onpointerdown = (e) => iniciarArrasteSVG(e, 'luminaria', lum.id, lum.circuitoId);
-          gLum.oncontextmenu = (e) => { e.preventDefault(); e.stopPropagation(); lum.rot = !lum.rot; atualizarTudo(); };
+          gLum.oncontextmenu = (e) => { e.preventDefault(); e.stopPropagation(); salvarEstadoParaUndo(); lum.rot = !lum.rot; atualizarTudo(); };
         }
 
         if (circ.formato === 'painel_red') {
@@ -1864,7 +2007,6 @@
           gLum.appendChild(luzInterna);
         }
 
-        // Tag de Numeração P1, P2, P3... (Para cruzar com a Tabela do Pedreiro na Página 2)
         const tagTxt = document.createElementNS("http://www.w3.org/2000/svg", "text");
         tagTxt.setAttribute("x", cx);
         tagTxt.setAttribute("y", cy - (hPx / 2) - 4);
@@ -1879,7 +2021,7 @@
         svgEl.appendChild(gLum);
       });
 
-      // 6. VÉRTICES ARRASTÁVEIS DAS PAREDES (NA TELA INTERATIVA)
+      // 6. VÉRTICES ARRASTÁVEIS DAS PAREDES
       if (!modoPrint && form !== 'elipse') {
         verticesSala.forEach((v, idx) => {
           const handle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
@@ -1946,9 +2088,10 @@
     }
 
     // =========================================================================
-    // 6. EXEMPLO RÁPIDO SALA EM "L" + MEMORIAL PDF 2 PÁGINAS PARA OBRA
+    // 6. EXEMPLO RÁPIDO SALA EM "L" + MEMORIAL PDF MULTI-PÁGINA
     // =========================================================================
     function carregarExemploSalaEmL() {
+      salvarEstadoParaUndo();
       selecionarSetor('residencial', true);
       document.getElementById('ambiente').value = 'res_sala_jantar';
       renderizarBotoesCenarioContextual();
@@ -1987,6 +2130,7 @@
         { id: 'l_sc3',   circuitoId: 'c_sanca',    x: 2.65, y: 8.30, rot: true }
       ];
 
+      resetarCameraSVG();
       itemSelecionado = { tipo: 'luminaria', id: 'l_pend1', circuitoId: 'c_pendente' };
       atualizarTudo();
     }
@@ -1998,7 +2142,6 @@
       const formNome = document.getElementById('formatoSalaSelect').options[document.getElementById('formatoSalaSelect').selectedIndex].text;
       const nomeProj = document.getElementById('nomeProjetoInput').value || (amb ? amb.nome.split('(')[0].trim() : "Estudo Luminotécnico");
 
-      // Cabeçalhos e Cards Página 1
       document.getElementById('prtProjeto').innerText = nomeProj;
       document.getElementById('prtTituloFolha2').innerText = `Planta Executiva de Forro Cotada — ${nomeProj}`;
       document.getElementById('prtData').innerText = new Date().toLocaleDateString('pt-BR');
@@ -2013,7 +2156,6 @@
       document.getElementById('prtCardLux').innerText = `${Math.round(luxReal)} lx`;
       document.getElementById('prtCardMeta').innerText = `Meta ABNT: ${E} lx`;
 
-      // Tabela 1: Parâmetros
       document.getElementById('prtAmbiente').innerText = amb ? amb.nome.split('[')[0].trim() : "Personalizado";
       document.getElementById('prtLuxAlvo').innerText = `${E} lx ${amb ? '(' + amb.irc + ')' : ''}`;
       document.getElementById('prtDimensoes').innerText = `${formNome} (Quadro Base ${C.toFixed(2)}m × ${L.toFixed(2)}m)`;
@@ -2023,14 +2165,12 @@
       document.getElementById('prtKelvin').innerText = `${kelvinNum}K (${diagKelvin.classeNbr}) — ${diagKelvin.statusCurto}`;
       document.getElementById('prtLuxReal').innerText = `${Math.round(luxReal)} lx (${totalPecas} peças / ${totalLampadas} lâmpadas)`;
 
-      // Guia Elétrico Amigável (Seção 3)
       document.getElementById('prtGuiaEletrica').innerHTML = `
         1. <strong>Potência Total Instalada:</strong> ${potTotal} W (Corrente: <strong>${amp127} A em 127V</strong> ou <strong>${amp220} A em 220V</strong>).<br>
         2. <strong>Fiação e Proteção Mínima (NBR 5410):</strong> Cabo seção mínima <strong>1,5 mm²</strong> (Fase + Neutro + Terra) e Disjuntor de <strong>10A</strong> dedicado para iluminação.<br>
         3. <strong>Separação de Teclas no Interruptor:</strong> Recomenda-se dividir os <strong>${circuitosAtivos.length} circuito(s)</strong> em retornos independentes para permitir acendimento parcial.
       `;
 
-      // Tabela 2: Circuitos e Compras
       const tbody = document.getElementById('prtTabelaLuminarias');
       tbody.innerHTML = '';
 
@@ -2056,7 +2196,6 @@
         tbody.appendChild(tr);
       });
 
-      // Página 2: Croqui Ampliado Fit to Page + Tabela de Trena Ponto a Ponto
       renderizarPlantaSVG(document.getElementById('svgForroPrint'), C, L, A, kelvinNum, true);
       document.getElementById('prtLegendaForro').innerText = 
         `Quadro Base: ${C.toFixed(2)}m × ${L.toFixed(2)}m (Área Real: ${area.toFixed(2)} m²) • As linhas tracejadas no topo (X) e na esquerda (Y) indicam os alinhamentos de trena a partir do Ponto REF (0,00m).`;
@@ -2068,7 +2207,6 @@
         const circ = circuitosAtivos.find(c => c.id === lum.circuitoId);
         if (!circ) return;
 
-        // Calcula distância até a luminária vizinha mais próxima
         let menorDist = null;
         luminariasPlanta.forEach((outra, idxO) => {
           if (idxO !== idxP) {
@@ -2232,6 +2370,7 @@
     }
 
     function limparFormulario() {
+      salvarEstadoParaUndo();
       document.getElementById('nomeProjetoInput').value = "";
       document.getElementById('ambiente').value = "";
       document.getElementById('luxInput').value = "";
@@ -2254,6 +2393,7 @@
       luminariasPlanta = [];
       cenarioPlanta = [];
       itemSelecionado = null;
+      resetarCameraSVG();
       renderizarBotoesCenarioContextual();
       atualizarTudo();
     }
@@ -2263,8 +2403,11 @@
       window.print();
     }
 
+    configurarEventosCameraSVG();
     selecionarSetor('residencial', true);
     limparFormulario();
+    historicoUndo = [];
+    atualizarBotaoUndo();
   </script>
 </body>
 </html>
