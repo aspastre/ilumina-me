@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EcoDesign & BaseArq - Estúdio Luminotécnico CAD V3.3</title>
+  <title>EcoDesign & BaseArq - Estúdio Luminotécnico CAD V3.4</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { background-color: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
@@ -41,7 +41,6 @@
       #appScreenArea, #modalTutorial { display: none !important; }
       #memorialPrintArea { display: block !important; width: 100%; }
       .quebra-pagina-croqui { page-break-before: always; break-before: page; padding-top: 2mm; }
-      /* Proteção para tabelas longas que avançam para a 3ª ou 4ª página */
       thead { display: table-header-group; }
       tr { page-break-inside: avoid; break-inside: avoid; }
     }
@@ -50,14 +49,14 @@
 <body class="p-4 md:p-6">
 
   <!-- ========================================================================= -->
-  <!-- MODAL DE TUTORIAL / GUIA RÁPIDO V3.3                                      -->
+  <!-- MODAL DE AJUDA / GUIA RÁPIDO + DEMONSTRAÇÃO (OCULTO POR PADRÃO)           -->
   <!-- ========================================================================= -->
   <div id="modalTutorial" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="card max-w-3xl w-full p-6 border-orange-500/50 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-700 pb-3">
         <div>
-          <span class="text-[10px] font-bold uppercase tracking-widest text-orange-400">Manual do Estúdio Luminotécnico V3.3</span>
-          <h2 class="text-lg font-extrabold text-white">Guia Rápido: Zoom, Pan, Ctrl+Z, Sombras & Prancha de Obra</h2>
+          <span class="text-[10px] font-bold uppercase tracking-widest text-orange-400">Manual do Estúdio Luminotécnico V3.4</span>
+          <h2 class="text-lg font-extrabold text-white">Guia Rápido de Engenharia & Recursos CAD</h2>
         </div>
         <button type="button" onclick="fecharTutorial()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-sm">✕</button>
       </div>
@@ -66,43 +65,46 @@
         <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
           <div class="font-bold text-orange-400 text-sm">1. Navegação CAD: Zoom, Pan e Ctrl+Z</div>
           <p>Use a <strong>roda do mouse (Scroll)</strong> sobre a planta (ou os botões <code>🔍+</code> e <code>🔍−</code>) para dar Zoom nos detalhes.</p>
-          <p>Para <strong>deslizar a planta (Pan)</strong>, basta clicar e arrastar em qualquer área vazia do fundo. Errou um movimento? Aperte <strong>Ctrl+Z</strong> (ou clique em <code>↩️ Desfazer</code>).</p>
+          <p>Para <strong>deslizar a planta (Pan)</strong>, clique e arraste em qualquer área vazia do fundo. Errou um movimento? Aperte <strong>Ctrl+Z</strong> (ou clique em <code>↩️ Desfazer</code>).</p>
         </div>
 
         <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
-          <div class="font-bold text-sky-400 text-sm">2. Cenário Adaptativo + Projeção de Sombras</div>
-          <p>Ao escolher um cômodo no Passo 1 (Cozinha, Dormitório, Banheiro, Jantar), a barra <strong>🛋️ Inserir Cenário</strong> traz os móveis daquele ambiente.</p>
-          <p>Cada móvel possui altura física e <strong>projeta sombra real no piso</strong> conforme a posição das luminárias no teto!</p>
+          <div class="font-bold text-sky-400 text-sm">2. Luminárias Autorais & Auditor de Ficha Técnica</div>
+          <p>Quer especificar uma peça de design autoral da internet? Cole o link e use o botão <strong>🪄 Colar Ficha Técnica do Site</strong> (ou digite os dados no Passo 3).</p>
+          <p>O <strong>Auditor de Especificação</strong> avisa na hora se o fabricante omitiu Lúmens, Watts, Abertura ($\theta$) ou Medidas e permite estimar os valores faltantes com 1 clique.</p>
         </div>
 
         <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
-          <div class="font-bold text-emerald-400 text-sm">3. Mover em Grupo ou Individual</div>
-          <p>Use a chave <strong>👆 Mover Individual</strong> (move 1 peça) ou <strong>🔗 Mover Grupo</strong> (move todas as peças daquele circuito juntas). Clique com o botão direito sobre uma peça para girá-la 90°.</p>
+          <div class="font-bold text-emerald-400 text-sm">3. Cenário Contextual + Projeção de Sombras</div>
+          <p>Ao escolher um cômodo no Passo 1, a barra <strong>🛋️ Inserir Cenário</strong> traz os móveis daquele ambiente. Cada móvel tem altura física ($h$) e projeta sombra real no piso na direção oposta às luzes.</p>
         </div>
 
         <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
-          <div class="font-bold text-amber-400 text-sm">4. Memorial Multi-Página para Obra</div>
-          <p>O botão <strong>🖨️ Memorial PDF</strong> gera o Laudo e Guia do Pedreiro/Eletricista na Página 1, a Prancha Ampliada na Página 2 e, se houver dezenas de luminárias, pagina a Tabela de Trena automaticamente para a Página 3 repetindo o cabeçalho.</p>
+          <div class="font-bold text-amber-400 text-sm">4. Croqui Gigante na Última Página do PDF</div>
+          <p>No <strong>🖨️ Memorial PDF</strong>, todas as tabelas (Laudo, Compras e Tabela de Trena <code>P1, P2...</code>) vêm nas primeiras páginas, e a <strong>última folha A4 inteira</strong> é exclusiva para a Prancha Executiva do Croqui Ampliado.</p>
         </div>
       </div>
 
-      <div class="flex justify-end pt-2 border-t border-slate-700">
+      <div class="flex flex-wrap justify-between items-center gap-3 pt-3 border-t border-slate-700">
+        <button type="button" onclick="carregarExemploSalaEmL(); fecharTutorial();" 
+                class="bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-600/50 text-xs font-bold px-4 py-2 rounded-lg transition">
+          ✨ Carregar Projeto Exemplo (Sala em "L" Completa)
+        </button>
         <button type="button" onclick="fecharTutorial()" class="bg-orange-500 hover:bg-orange-400 text-slate-950 font-bold text-xs px-5 py-2 rounded-lg transition">
-          Fechar Guia
+          Fechar e Projetar
         </button>
       </div>
     </div>
   </div>
 
   <!-- ========================================================================= -->
-  <!-- ÁREA 1: INTERFACE DO ESTÚDIO LUMINOTÉCNICO V3.3                           -->
+  <!-- ÁREA 1: INTERFACE DO ESTÚDIO LUMINOTÉCNICO V3.4                           -->
   <!-- ========================================================================= -->
   <div id="appScreenArea" class="max-w-7xl mx-auto space-y-5">
     
-    <!-- HEADER COM A LOGO OFICIAL DO REPOSITÓRIO -->
+    <!-- HEADER LIMPO E EXECUTIVO -->
     <div class="card p-4 md:p-5 border-l-4 border-l-emerald-500 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
       <div class="flex items-center gap-4">
-        <!-- Quadradinho de 48x48px com a Logo enviada para o GitHub (e fallback automático se offline) -->
         <div class="w-12 h-12 rounded-xl bg-amber-50/95 border border-emerald-500/60 flex items-center justify-center shadow-lg shrink-0 p-1 overflow-hidden">
           <img src="Logo_Single_Color_BlackShadow.png" alt="Logo EcoDesign" 
                class="w-full h-full object-contain"
@@ -116,8 +118,13 @@
           <div class="flex flex-wrap items-center gap-2">
             <h1 class="text-lg md:text-xl font-extrabold tracking-tight text-white">EcoDesign Interiores e Paisagismo</h1>
             <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-orange-500/20 text-orange-300 border border-orange-500/30">
-              BaseArq® CAD Engine V3.3
+              BaseArq® CAD Engine V3.4
             </span>
+            <button type="button" onclick="abrirTutorial()" 
+                    class="w-6 h-6 rounded-full bg-slate-800 hover:bg-orange-500 text-orange-300 hover:text-slate-950 border border-orange-500/40 text-xs font-black flex items-center justify-center transition"
+                    title="Abrir Manual de Uso e Projeto de Demonstração">
+              ?
+            </button>
           </div>
           <p class="text-xs text-slate-400 mt-0.5">
             Estúdio Luminotécnico Multicircuito, Projeção de Sombras & Prancha Executiva de Obra • <span class="text-slate-300">ABNT NBR ISO/CIE 8995-1</span>
@@ -126,19 +133,10 @@
       </div>
 
       <div class="flex flex-wrap items-center gap-2 self-end lg:self-center">
-        <input type="text" id="nomeProjetoInput" placeholder="Cliente / Ambiente (p/ Memorial)" 
-               class="rounded-lg px-3 py-1.5 text-xs w-48" oninput="atualizarTudo()">
-        <button type="button" onclick="carregarExemploSalaEmL()" 
-                class="bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-600/50 text-xs font-bold px-3 py-1.5 rounded-lg transition"
-                title="Preenche um exemplo completo de Sala em L com móveis, sombras e 3 circuitos">
-          ✨ Testar Exemplo Sala em "L"
-        </button>
-        <button type="button" onclick="abrirTutorial()" 
-                class="bg-slate-800 hover:bg-slate-700 text-orange-300 border border-orange-500/40 text-xs font-bold px-3 py-1.5 rounded-lg transition">
-          ❓ Guia V3.3
-        </button>
+        <input type="text" id="nomeProjetoInput" placeholder="Nome do Cliente / Ambiente (p/ PDF)" 
+               class="rounded-lg px-3 py-1.5 text-xs w-56" oninput="atualizarTudo()">
         <button type="button" onclick="gerarMemorialPDF()" 
-                class="bg-sky-950/80 hover:bg-sky-900 text-sky-200 border border-sky-500/50 text-xs font-bold px-3.5 py-1.5 rounded-lg transition shadow-sm">
+                class="bg-sky-950/80 hover:bg-sky-900 text-sky-200 border border-sky-500/50 text-xs font-bold px-4 py-1.5 rounded-lg transition shadow-sm">
           🖨️ Gerar Memorial PDF
         </button>
         <button type="button" onclick="limparFormulario()" 
@@ -309,96 +307,124 @@
           </div>
         </div>
 
-        <!-- 3. CONSTRUTOR E GERENCIADOR DE MÚLTIPLAS LUMINÁRIAS -->
+        <!-- 3. CONSTRUTOR DE CIRCUITOS + AUDITOR DE LUMINÁRIAS AUTORAIS / LINKS -->
         <div class="card p-4 space-y-3.5 border-orange-500/30">
           <div class="flex justify-between items-center border-b border-slate-800 pb-2">
             <div>
-              <h2 class="text-xs font-bold uppercase tracking-wider text-orange-400">3. Adicionar Luminárias ao Ambiente (Multicircuito)</h2>
-              <p class="text-[10px] text-slate-400">Cada ponto recebe um código (P1, P2...) com cota exata para o gesseiro/eletricista</p>
+              <h2 class="text-xs font-bold uppercase tracking-wider text-orange-400">3. Especificar Luminárias (Catálogo ou Peça Autoral / Link)</h2>
+              <p class="text-[10px] text-slate-400">Escolha do catálogo ou importe especificações de peças de designer da web</p>
             </div>
-            <button type="button" onclick="toggleExtratorTexto()" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-orange-300 px-2 py-1 rounded border border-slate-700 font-semibold">
-              🪄 Extrair de Texto
+            <button type="button" onclick="toggleExtratorTexto()" class="text-[10px] bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 px-2.5 py-1 rounded-lg border border-orange-500/40 font-bold transition">
+              🪄 Colar Ficha Técnica do Site
             </button>
           </div>
 
-          <div id="boxExtratorRegex" class="hidden bg-slate-900 p-2.5 rounded-lg border border-slate-700 space-y-1.5">
-            <textarea id="txtColadoSite" rows="2" placeholder="Cole a descrição do site da loja (Ex: 'Spot Dicroica 7W 525 lumens 36° 3000K 10x10cm')..." class="w-full rounded p-1.5 text-xs"></textarea>
-            <button type="button" onclick="extrairDadosDoTextoColado()" class="bg-orange-500 text-slate-950 font-bold text-[11px] px-3 py-1 rounded">⚡ Preencher Dados</button>
+          <!-- Extrator Inteligente de Ficha Técnica da Web -->
+          <div id="boxExtratorRegex" class="hidden bg-slate-900 p-3 rounded-xl border border-orange-500/40 space-y-2">
+            <div class="text-[11px] text-orange-200 font-semibold">
+              📋 Copie o texto da página do fabricante/loja (ex: Lumini, Reka, Yamamura, Cristallux) e cole abaixo:
+            </div>
+            <textarea id="txtColadoSite" rows="3" placeholder="Ex: 'Pendente Autoral Bossa Ø45cm - LED Integrado 36W - Fluxo 2800 lm - Abertura 100° - 2700K'..." class="w-full rounded p-2 text-xs"></textarea>
+            <div class="flex justify-between items-center">
+              <span class="text-[10px] text-slate-400">O auditor abaixo avisará se faltar algum dado crucial no site!</span>
+              <button type="button" onclick="extrairDadosDoTextoColado()" class="bg-orange-500 hover:bg-orange-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-lg transition">
+                ⚡ Extrair e Auditar Especificação
+              </button>
+            </div>
           </div>
 
-          <div>
-            <label class="block text-[11px] text-slate-400 mb-1">Selecionar Modelo no Catálogo (Preenche Lúmens, Watts, Ângulo e Medidas)</label>
-            <select id="presetLuz" class="w-full rounded-lg p-2 text-xs" onchange="atualizarLuminariaPorPreset()">
-              <option value="" selected>-- Escolha um modelo para configurar e inserir --</option>
-              
-              <optgroup label="1. Iluminação Difusa: Painéis Modulares, Plafons e Bulbos">
-                <option value="1260|18|1|painel_quad|0.22|0.22|120">Painel Plafon LED Quadrado 18W (1.260 lm | 120° | 22×22cm)</option>
-                <option value="1680|24|1|painel_quad|0.29|0.29|120">Painel Plafon LED Quadrado 24W (1.680 lm | 120° | 29×29cm)</option>
-                <option value="1260|18|1|painel_red|0.22|0.22|120">Painel Plafon LED Redondo 18W (1.260 lm | 120° | Ø22cm)</option>
-                <option value="1680|24|1|painel_red|0.30|0.30|120">Painel Plafon LED Redondo 24W (1.680 lm | 120° | Ø30cm)</option>
-                <option value="3600|36|1|painel_quad|0.60|0.60|120">Painel Modular Corporativo/Escolar 60×60cm (36W - 3.600 lm | 120°)</option>
-                <option value="4000|40|1|painel_quad|1.20|0.30|120">Painel Plafon Linear 120×30cm (40W - 4.000 lm | 120°)</option>
-                <option value="806|10|2|painel_red|0.30|0.30|120">Plafon Redondo Sobrepor Ø30cm c/ 2x Bulbo E27 (2x 806 lm | 120°)</option>
-              </optgroup>
+          <!-- Seleção de Catálogo + Geometria no Croqui (Para Peças Autorais) -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+            <div class="md:col-span-2">
+              <label class="block text-[11px] text-slate-400 mb-1">Catálogo Base (Ou deixe em branco p/ Peça Autoral)</label>
+              <select id="presetLuz" class="w-full rounded-lg p-2 text-xs" onchange="atualizarLuminariaPorPreset()">
+                <option value="" selected>-- Peça Autoral Customizada ou Selecione do Catálogo --</option>
+                
+                <optgroup label="1. Iluminação Difusa: Painéis, Plafons e Cúpulas">
+                  <option value="1260|18|1|painel_quad|0.22|0.22|120">Painel Plafon LED Quadrado 18W (1.260 lm | 120° | 22×22cm)</option>
+                  <option value="1680|24|1|painel_quad|0.29|0.29|120">Painel Plafon LED Quadrado 24W (1.680 lm | 120° | 29×29cm)</option>
+                  <option value="1260|18|1|painel_red|0.22|0.22|120">Painel Plafon LED Redondo 18W (1.260 lm | 120° | Ø22cm)</option>
+                  <option value="1680|24|1|painel_red|0.30|0.30|120">Painel Plafon LED Redondo 24W (1.680 lm | 120° | Ø30cm)</option>
+                  <option value="2880|36|1|painel_red|0.45|0.45|110">Pendente / Plafon Capri Circle 36W (2.880 lm | 110° | Ø45cm)</option>
+                  <option value="3600|36|1|painel_quad|0.60|0.60|120">Painel Modular Corporativo/Escolar 60×60cm (36W - 3.600 lm | 120°)</option>
+                  <option value="4000|40|1|painel_quad|1.20|0.30|120">Painel Plafon Linear 120×30cm (40W - 4.000 lm | 120°)</option>
+                  <option value="806|10|2|painel_red|0.30|0.30|120">Plafon Redondo Sobrepor Ø30cm c/ 2x Bulbo E27 (2x 806 lm | 120°)</option>
+                </optgroup>
 
-              <optgroup label="2. Spots e Iluminação Direcionável (Com Ângulo de Facho)">
-                <option value="525|7|1|spot|0.10|0.10|36">Spot GU10 MR16 / Dicroica Simples (525 lm | 36° | 10×10cm)</option>
-                <option value="525|7|2|spot|0.20|0.10|36">Spot Embutir Duplo Dicroica MR16 (2x 525 lm | 36° | 20×10cm)</option>
-                <option value="490|7|1|spot|0.12|0.12|50">Spot Direcionável / Trilho Cristall 7W (490 lm | 50° | 12×12cm)</option>
-                <option value="630|9|1|spot|0.12|0.12|50">Spot Direcionável p/ Trilho 9W (630 lm | 50° | 12×12cm)</option>
-                <option value="450|7|1|spot|0.12|0.12|24">Spot AR70 Antiofuscante Foco Fechado (450 lm | 24° | 12×12cm)</option>
-                <option value="950|12|1|spot|0.17|0.17|24">Spot AR111 Destaque Lojas/Pé-Direito (950 lm | 24° | 17×17cm)</option>
-                <option value="550|7|1|spot|0.10|0.10|36">Lâmpada PAR20 E27 Aconchego (550 lm | 36° | 10×10cm)</option>
-                <option value="950|11|1|spot|0.13|0.13|36">Lâmpada PAR30 E27 Comercial (950 lm | 36° | 13×13cm)</option>
-                <option value="250|3|1|spot|0.05|0.05|30">Mini Spot GU MR11 Marcenaria/Nicho (250 lm | 30° | 5×5cm)</option>
-              </optgroup>
+                <optgroup label="2. Spots e Iluminação Direcionável (Com Ângulo de Facho)">
+                  <option value="525|7|1|spot|0.10|0.10|36">Spot GU10 MR16 / Dicroica Simples (525 lm | 36° | 10×10cm)</option>
+                  <option value="525|7|2|spot|0.20|0.10|36">Spot Embutir Duplo Dicroica MR16 (2x 525 lm | 36° | 20×10cm)</option>
+                  <option value="490|7|1|spot|0.12|0.12|50">Spot Direcionável / Trilho Cristall 7W (490 lm | 50° | 12×12cm)</option>
+                  <option value="630|9|1|spot|0.12|0.12|50">Spot Direcionável p/ Trilho 9W (630 lm | 50° | 12×12cm)</option>
+                  <option value="450|7|1|spot|0.12|0.12|24">Spot AR70 Antiofuscante Foco Fechado (450 lm | 24° | 12×12cm)</option>
+                  <option value="950|12|1|spot|0.17|0.17|24">Spot AR111 Destaque Lojas/Pé-Direito (950 lm | 24° | 17×17cm)</option>
+                  <option value="550|7|1|spot|0.10|0.10|36">Lâmpada PAR20 E27 Aconchego (550 lm | 36° | 10×10cm)</option>
+                  <option value="950|11|1|spot|0.13|0.13|36">Lâmpada PAR30 E27 Comercial (950 lm | 36° | 13×13cm)</option>
+                  <option value="250|3|1|spot|0.05|0.05|30">Mini Spot GU MR11 Marcenaria/Nicho (250 lm | 30° | 5×5cm)</option>
+                </optgroup>
 
-              <optgroup label="3. Pendentes, Lustres, Abajures e Fitas de Sanca">
-                <option value="400|4|6|painel_red|0.50|0.50|110">Lustre / Pendente Mesa Jantar Ø50cm (6x 400 lm = 2.400 lm | 110°)</option>
-                <option value="806|9|3|painel_red|0.45|0.45|100">Pendente Triplo Mesa Jantar c/ Bulbo (3x 806 lm = 2.418 lm | 100°)</option>
-                <option value="420|5|1|painel_red|0.25|0.25|90">Abajur / Candeeiro de Mesa (1x 420 lm | 5W | 90° | Ø25cm)</option>
-                <option value="480|9|1|painel_quad|0.18|0.10|80">Arandela de Parede Duplo Facho (480 lm | 9W | 80°)</option>
-                <option value="1000|12|1|linear|1.00|0.03|120">Fita de LED Sanca Difusa - Módulo 1 Metro (1.000 lm/m | 12W | 120°)</option>
-                <option value="1800|20|1|linear|1.00|0.04|110">Perfil Linear LED Embutir - Módulo 1 Metro (1.800 lm/m | 20W | 110°)</option>
-              </optgroup>
+                <optgroup label="3. Pendentes, Lustres, Abajures e Fitas de Sanca">
+                  <option value="400|4|6|painel_red|0.50|0.50|110">Lustre / Pendente Mesa Jantar Ø50cm (6x 400 lm = 2.400 lm | 110°)</option>
+                  <option value="806|9|3|painel_red|0.45|0.45|100">Pendente Triplo Mesa Jantar c/ Bulbo (3x 806 lm = 2.418 lm | 100°)</option>
+                  <option value="420|5|1|painel_red|0.25|0.25|90">Abajur / Candeeiro de Mesa (1x 420 lm | 5W | 90° | Ø25cm)</option>
+                  <option value="480|9|1|painel_quad|0.18|0.10|80">Arandela de Parede Duplo Facho (480 lm | 9W | 80°)</option>
+                  <option value="1000|12|1|linear|1.00|0.03|120">Fita de LED Sanca Difusa - Módulo 1 Metro (1.000 lm/m | 12W | 120°)</option>
+                  <option value="1800|20|1|linear|1.00|0.04|110">Perfil Linear LED Embutir - Módulo 1 Metro (1.800 lm/m | 20W | 110°)</option>
+                </optgroup>
 
-              <optgroup label="4. Luminárias Tubulares Escolares/Comerciais">
-                <option value="2200|20|2|tubular|1.22|0.25|120">Luminária Tubular Calha Dupla 120cm (2x 2.200 lm | 120° | 1,22×0,25m)</option>
-                <option value="1850|18|2|tubular|1.22|0.25|120">Luminária Tubular LED T8 120cm Dupla (2x 1.850 lm | 120° | 1,22×0,25m)</option>
-              </optgroup>
-            </select>
+                <optgroup label="4. Luminárias Tubulares Escolares/Comerciais">
+                  <option value="2200|20|2|tubular|1.22|0.25|120">Luminária Tubular Calha Dupla 120cm (2x 2.200 lm | 120° | 1,22×0,25m)</option>
+                  <option value="1850|18|2|tubular|1.22|0.25|120">Luminária Tubular LED T8 120cm Dupla (2x 1.850 lm | 120° | 1,22×0,25m)</option>
+                </optgroup>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] text-sky-300 font-semibold mb-1">Desenho no Croqui</label>
+              <select id="formatoPecaSelect" class="w-full rounded-lg p-2 text-xs font-bold" onchange="auditarEspecificacaoLuminaria()">
+                <option value="painel_red">⚪ Redondo / Cúpula</option>
+                <option value="spot" selected>🎯 Spot / Embutido</option>
+                <option value="painel_quad">⬛ Quadrado / Plafon</option>
+                <option value="linear">📏 Linear / Perfil / Fita</option>
+                <option value="tubular">🟰 Calha Tubular</option>
+              </select>
+            </div>
           </div>
 
           <div class="grid grid-cols-3 md:grid-cols-6 gap-2">
             <div>
-              <label class="block text-[10px] text-orange-300 font-semibold mb-0.5">Lâmp/Peça</label>
-              <input type="number" id="qtdLampPorPonto" value="" placeholder="1" min="1" max="24" class="w-full rounded p-1.5 text-xs font-bold">
+              <label class="block text-[10px] text-orange-300 font-semibold mb-0.5">Lâmp/Peça *</label>
+              <input type="number" id="qtdLampPorPonto" value="" placeholder="1" min="1" max="24" class="w-full rounded p-1.5 text-xs font-bold" oninput="auditarEspecificacaoLuminaria()">
             </div>
             <div>
-              <label class="block text-[10px] text-orange-300 font-semibold mb-0.5">Lúmens (1x)</label>
-              <input type="number" id="lumens" value="" placeholder="525" step="50" min="10" class="w-full rounded p-1.5 text-xs font-bold">
+              <label class="block text-[10px] text-orange-300 font-semibold mb-0.5">Lúmens (1x) *</label>
+              <input type="number" id="lumens" value="" placeholder="525" step="50" min="10" class="w-full rounded p-1.5 text-xs font-bold" oninput="auditarEspecificacaoLuminaria()">
             </div>
             <div>
-              <label class="block text-[10px] text-slate-400 mb-0.5">Watts (1x)</label>
-              <input type="number" id="watts" value="" placeholder="7" min="1" class="w-full rounded p-1.5 text-xs">
+              <label class="block text-[10px] text-slate-300 font-semibold mb-0.5">Watts (1x) *</label>
+              <input type="number" id="watts" value="" placeholder="7" min="1" class="w-full rounded p-1.5 text-xs" oninput="auditarEspecificacaoLuminaria()">
             </div>
             <div>
-              <label class="block text-[10px] text-amber-300 font-semibold mb-0.5">Abertura (°)</label>
-              <input type="number" id="anguloFacho" value="" placeholder="36" min="10" max="160" step="2" class="w-full rounded p-1.5 text-xs font-bold border-amber-500/50">
+              <label class="block text-[10px] text-amber-300 font-semibold mb-0.5">Abertura (°) *</label>
+              <input type="number" id="anguloFacho" value="" placeholder="36" min="10" max="160" step="2" class="w-full rounded p-1.5 text-xs font-bold border-amber-500/50" oninput="auditarEspecificacaoLuminaria()">
             </div>
             <div>
-              <label class="block text-[10px] text-sky-300 font-semibold mb-0.5">Comp (m)</label>
-              <input type="number" id="dimCompPeca" value="" placeholder="0.10" step="0.02" min="0.02" class="w-full rounded p-1.5 text-xs">
+              <label class="block text-[10px] text-sky-300 font-semibold mb-0.5">Comp (m) *</label>
+              <input type="number" id="dimCompPeca" value="" placeholder="0.10" step="0.02" min="0.02" class="w-full rounded p-1.5 text-xs" oninput="auditarEspecificacaoLuminaria()">
             </div>
             <div>
-              <label class="block text-[10px] text-sky-300 font-semibold mb-0.5">Larg (m)</label>
-              <input type="number" id="dimLargPeca" value="" placeholder="0.10" step="0.02" min="0.02" class="w-full rounded p-1.5 text-xs">
+              <label class="block text-[10px] text-sky-300 font-semibold mb-0.5">Larg (m) *</label>
+              <input type="number" id="dimLargPeca" value="" placeholder="0.10" step="0.02" min="0.02" class="w-full rounded p-1.5 text-xs" oninput="auditarEspecificacaoLuminaria()">
             </div>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-            <input type="text" id="nomeComercialLum" placeholder="Nome do Circuito / Peça (Ex: Pendente Mesa Jantar)" class="w-full rounded p-1.5 text-xs">
-            <input type="url" id="linkComercialLum" placeholder="Link da Loja (Opcional - sai no Memorial PDF)" class="w-full rounded p-1.5 text-xs">
+            <input type="text" id="nomeComercialLum" placeholder="Nome Autoral / Designer (Ex: Pendente Bossa Lumini)" class="w-full rounded p-1.5 text-xs" oninput="auditarEspecificacaoLuminaria()">
+            <input type="url" id="linkComercialLum" placeholder="Cole o Link da Luminária na Internet (Sai no PDF)" class="w-full rounded p-1.5 text-xs" oninput="auditarEspecificacaoLuminaria()">
+          </div>
+
+          <!-- AUDITOR DE ESPECIFICAÇÃO TÉCNICA (INDICA O QUE FALTA NO LINK/PEÇA AUTORAL) -->
+          <div id="boxDiagnosticoLum" class="p-2.5 rounded-xl text-[11px] border bg-slate-900/60 border-slate-800 text-slate-400 flex flex-wrap justify-between items-center gap-2">
+            <span>🔍 <strong>Auditor de Especificação:</strong> Escolha um item do catálogo ou preencha/cole os dados de uma luminária autoral para validar se há dados faltantes.</span>
           </div>
 
           <!-- Botões de Inserção Multicircuito -->
@@ -538,7 +564,6 @@
           <!-- CANVAS VETORIAL SVG INTERATIVO COM CONTROLES FLUTUANTES DE ZOOM & PAN -->
           <div class="flex flex-col items-center justify-center bg-slate-950 p-3 rounded-xl border border-slate-800 relative">
             
-            <!-- Botões Flutuantes de Zoom e Centralização -->
             <div class="absolute top-5 right-5 z-10 flex items-center gap-1 bg-slate-900/90 backdrop-blur px-2 py-1 rounded-lg border border-slate-700 shadow-lg text-xs">
               <button type="button" onclick="aplicarZoomCanvas(1.25)" class="px-2 py-0.5 rounded hover:bg-slate-800 text-sky-300 font-bold" title="Aproximar (Zoom In)">🔍+</button>
               <span id="lblNivelZoom" class="text-[10px] font-mono text-slate-300 px-1">100%</span>
@@ -560,16 +585,16 @@
 
     <footer class="border-t border-slate-800 pt-4 pb-2 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500 gap-2">
       <div><strong class="text-emerald-400">EcoDesign Interiores e Paisagismo</strong> • Direção Técnica: Adriano Sanches Pastre</div>
-      <div>Tecnologia & Motor Matemático: <strong class="text-orange-400">BaseArq® SaaS Platform V3.3</strong> • Todos os direitos reservados</div>
+      <div>Tecnologia & Motor Matemático: <strong class="text-orange-400">BaseArq® SaaS Platform V3.4</strong> • Todos os direitos reservados</div>
     </footer>
   </div>
 
   <!-- ========================================================================= -->
-  <!-- ÁREA 2: MEMORIAL EXECUTIVO A4 MULTI-PÁGINA (COM REPETIÇÃO DE CABEÇALHO)   -->
+  <!-- ÁREA 2: MEMORIAL EXECUTIVO A4 (TABELAS PRIMEIRO ➔ CROQUI NA ÚLTIMA PÁGINA)-->
   <!-- ========================================================================= -->
   <div id="memorialPrintArea" class="text-slate-900 font-sans">
     
-    <!-- ==================== SEÇÃO 1: MEMORIAL + GUIA DE OBRA ==================== -->
+    <!-- ==================== PARTE 1: MEMORIAL + TABELAS + GABARITO DE TRENA ==================== -->
     <div>
       <!-- Cabeçalho com a Logo Oficial -->
       <div class="border-b-4 border-emerald-700 pb-3 mb-4 flex justify-between items-center bg-slate-50 p-3 rounded-t-lg">
@@ -580,7 +605,7 @@
           </div>
           <div>
             <span class="text-[10px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">
-              Seção 01 • Memorial Técnico & Guia de Instalação na Obra
+              Caderno Técnico • Memorial de Cálculo, Compras & Gabarito de Trena
             </span>
             <h1 class="text-xl font-black text-slate-900 mt-1">EcoDesign Interiores e Paisagismo</h1>
             <p class="text-xs text-slate-600">Responsável Técnico: Adriano Sanches Pastre • Norma: ABNT NBR ISO/CIE 8995-1:2013</p>
@@ -589,7 +614,7 @@
         <div class="text-right text-xs">
           <div class="text-sm font-bold text-slate-900" id="prtProjeto">Estudo Luminotécnico</div>
           <div><strong>Emissão:</strong> <span id="prtData">--/--/----</span></div>
-          <div class="text-[10px] text-orange-700 font-bold mt-0.5">BaseArq® CAD Engine V3.3</div>
+          <div class="text-[10px] text-orange-700 font-bold mt-0.5">BaseArq® CAD Engine V3.4</div>
         </div>
       </div>
 
@@ -660,7 +685,7 @@
         <table class="w-full text-xs border-collapse border border-slate-400 text-left">
           <thead>
             <tr class="bg-slate-100 border-b border-slate-400">
-              <th class="p-1.5 border-r border-slate-300">Circuito / Modelo Comercial</th>
+              <th class="p-1.5 border-r border-slate-300">Circuito / Modelo Comercial / Link</th>
               <th class="p-1.5 border-r border-slate-300 text-center">Medida / Nicho</th>
               <th class="p-1.5 border-r border-slate-300 text-center">Facho / Ø Piso</th>
               <th class="p-1.5 border-r border-slate-300 text-center">Qtd. Peças</th>
@@ -674,7 +699,7 @@
       </div>
 
       <!-- Quadro 3: Guia Prático para Obra -->
-      <div class="mb-2">
+      <div class="mb-4">
         <h2 class="text-xs font-bold uppercase tracking-wider bg-amber-100 text-amber-950 px-2.5 py-1.5 border-l-4 border-amber-600 mb-2">
           3. Instruções Práticas para Execução na Obra (Gesseiro, Eletricista e Pedreiro)
         </h2>
@@ -682,9 +707,9 @@
           <div class="border border-slate-300 rounded-lg p-3 bg-slate-50 space-y-1.5">
             <div class="font-extrabold text-slate-900">📏 Como Marcar os Pontos no Forro (Gesseiro / Pedreiro):</div>
             <p class="text-[11px] text-slate-700 leading-relaxed">
-              1. Na <strong>Seção 02 (Próxima Página)</strong>, cada luminária está numerada como <strong>P1, P2, P3...</strong><br>
+              1. Cada luminária possui um código (<strong>P1, P2, P3...</strong>) listado na Tabela 4 abaixo e desenhado na <strong>Prancha Final (Última Página)</strong>.<br>
               2. O <strong>Ponto Zero (0,00 m)</strong> fica no <strong>Canto Superior Esquerdo</strong> da planta.<br>
-              3. Puxe a trena a partir da <strong>Parede Esquerda (Cota X)</strong> e da <strong>Parede Superior/Fundo (Cota Y)</strong> conforme a tabela da Seção 02 para marcar o centro exato de furação de cada peça.<br>
+              3. Puxe a trena a partir da <strong>Parede Esquerda (Eixo X)</strong> e da <strong>Parede Superior/Fundo (Eixo Y)</strong> para marcar o centro exato de furação de cada peça.<br>
               4. Confira o tamanho físico da peça antes de abrir o recorte no gesso.
             </p>
           </div>
@@ -696,34 +721,12 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- ==================== SEÇÃO 2: CROQUI EXECUTIVO AMPLIADO + TABELA DE TRENA MULTI-PÁGINA ==================== -->
-    <div class="quebra-pagina-croqui">
-      <div class="border-b-2 border-slate-900 pb-2 mb-3 flex justify-between items-center">
-        <div>
-          <span class="text-[10px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded bg-slate-200 text-slate-900">
-            Seção 02 • Prancha Executiva de Forro Ampliada (Fit to Page) & Gabarito de Trena
-          </span>
-          <h2 class="text-base font-black text-slate-900 mt-0.5" id="prtTituloFolha2">Planta de Marcação de Forro, Cotas de Eixo e Cones de Luz</h2>
-        </div>
-        <div class="text-right text-[11px] text-slate-600">
-          <div><strong>Referência (0,00m):</strong> Canto Superior Esquerdo</div>
-          <div><strong>EcoDesign Interiores e Paisagismo</strong> • BaseArq® V3.3</div>
-        </div>
-      </div>
-
-      <!-- CROQUI AMPLIADO FIT TO PAGE (SEMPRE EM 100% ENQUADRADO, INDEPENDENTE DO ZOOM DA TELA) -->
-      <div class="border-2 border-slate-900 rounded-lg p-2 bg-white flex flex-col items-center justify-center mb-3">
-        <svg id="svgForroPrint" width="760" height="540" viewBox="0 0 760 540" class="w-full h-auto max-h-[150mm]"></svg>
-        <p id="prtLegendaForro" class="text-[10px] text-slate-700 font-mono mt-1 text-center font-semibold"></p>
-      </div>
-
-      <!-- TABELA DE LOCAÇÃO NA TRENA (SE PASSAR PARA A 3ª PÁGINA, REPETE O CABEÇALHO AUTOMATICAMENTE) -->
-      <div>
-        <h3 class="text-xs font-bold uppercase tracking-wider bg-emerald-100 text-emerald-950 px-2.5 py-1 border-l-4 border-emerald-700 mb-1.5">
+      <!-- Quadro 4: TABELA DE LOCAÇÃO NA TRENA (Flui livremente se houver muitas luminárias, antes da Prancha Final!) -->
+      <div class="mb-2">
+        <h2 class="text-xs font-bold uppercase tracking-wider bg-emerald-100 text-emerald-950 px-2.5 py-1.5 border-l-4 border-emerald-700 mb-2">
           4. Gabarito de Marcação na Trena (Coordenadas Exatas Ponto a Ponto no Teto)
-        </h3>
+        </h2>
         <table class="w-full text-[11px] border-collapse border border-slate-400 text-left">
           <thead>
             <tr class="bg-slate-100 border-b border-slate-400">
@@ -737,6 +740,34 @@
           </thead>
           <tbody id="prtTabelaCoordenadasObra"></tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- ==================== ÚLTIMA PÁGINA SEMPRE EXCLUSIVA: PRANCHA DO CROQUI FIT-TO-PAGE ==================== -->
+    <div class="quebra-pagina-croqui">
+      <div class="border-b-2 border-slate-900 pb-2 mb-3 flex justify-between items-center">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-lg bg-white border border-slate-300 flex items-center justify-center p-1 shrink-0">
+            <img src="Logo_Single_Color_BlackShadow.png" alt="Logo EcoDesign" class="w-full h-full object-contain"
+                 onerror="this.style.display='none';">
+          </div>
+          <div>
+            <span class="text-[10px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded bg-slate-200 text-slate-900">
+              Prancha Executiva de Obra (Página Final Exclusiva • Fit to Page)
+            </span>
+            <h2 class="text-base font-black text-slate-900 mt-0.5" id="prtTituloFolha2">Planta de Marcação de Forro, Cotas de Eixo e Cones de Alcance</h2>
+          </div>
+        </div>
+        <div class="text-right text-[11px] text-slate-600">
+          <div><strong>Referência (0,00m):</strong> Canto Superior Esquerdo</div>
+          <div><strong>EcoDesign Interiores e Paisagismo</strong> • BaseArq® V3.4</div>
+        </div>
+      </div>
+
+      <!-- CROQUI GIGANTE OCUPANDO A PÁGINA INTEIRA (MAX-H 235MM) -->
+      <div class="border-2 border-slate-900 rounded-xl p-3 bg-white flex flex-col items-center justify-center">
+        <svg id="svgForroPrint" width="760" height="880" viewBox="0 0 760 880" class="w-full h-auto max-h-[232mm]"></svg>
+        <p id="prtLegendaForro" class="text-[10px] text-slate-700 font-mono mt-2 text-center font-semibold border-t border-slate-200 pt-1.5 w-full"></p>
       </div>
     </div>
 
@@ -832,7 +863,6 @@
     const CORES_CIRCUITOS = ["#f97316", "#38bdf8", "#34d399", "#e879f9", "#facc15", "#fb7185"];
 
     let setorAtual = 'residencial';
-    let formatoGeometricoPreset = 'spot';
     let mostrarMapaCalor = true;
     let mostrarCotasVisuais = true;
     let mostrarSombras = true;
@@ -843,10 +873,7 @@
     let luminariasPlanta = [];
     let cenarioPlanta = [];
 
-    // Pilha de Histórico para Ctrl+Z (Undo)
     let historicoUndo = [];
-
-    // Estado da Câmera SVG (Zoom & Pan)
     let cameraSVG = { zoom: 1.0, panX: 0, panY: 0 };
 
     let itemSelecionado = null;
@@ -864,6 +891,93 @@
     function fecharTutorial() { document.getElementById('modalTutorial').classList.add('hidden'); }
 
     // =========================================================================
+    // AUDITOR DE FICHA TÉCNICA DE LUMINÁRIAS AUTORAIS / LINKS DA WEB
+    // =========================================================================
+    function auditarEspecificacaoLuminaria() {
+      const box = document.getElementById('boxDiagnosticoLum');
+      const qtd = lerNum('qtdLampPorPonto', 0);
+      const lm = lerNum('lumens', 0);
+      const w = lerNum('watts', 0);
+      const ang = lerNum('anguloFacho', 0);
+      const comp = lerNum('dimCompPeca', 0);
+      const larg = lerNum('dimLargPeca', 0);
+      const nome = document.getElementById('nomeComercialLum').value.trim();
+      const link = document.getElementById('linkComercialLum').value.trim();
+
+      if (!qtd && !lm && !w && !ang && !comp && !larg && !nome && !link) {
+        box.className = "p-2.5 rounded-xl text-[11px] border bg-slate-900/60 border-slate-800 text-slate-400 flex flex-wrap justify-between items-center gap-2";
+        box.innerHTML = `<span>🔍 <strong>Auditor de Especificação:</strong> Escolha um item do catálogo ou preencha/cole os dados de uma luminária autoral para validar se há dados faltantes.</span>`;
+        return;
+      }
+
+      const faltantes = [];
+      if (qtd <= 0) faltantes.push("Qtd. Lâmpadas");
+      if (lm <= 0) faltantes.push("Fluxo Luminoso (Lúmens)");
+      if (w <= 0) faltantes.push("Potência (Watts)");
+      if (ang <= 0) faltantes.push("Ângulo de Abertura (°)");
+      if (comp <= 0 || larg <= 0) faltantes.push("Dimensões Físicas (Comp/Larg)");
+
+      if (faltantes.length === 0) {
+        const A = lerNum('alturaUtilInput', 1.90);
+        const diamFacho = (2 * A * Math.tan((ang * Math.PI) / 360)).toFixed(2);
+        box.className = "p-2.5 rounded-xl text-[11px] border bg-emerald-950/40 border-emerald-700/70 text-emerald-200 flex flex-wrap justify-between items-center gap-2";
+        box.innerHTML = `
+          <span>✅ <strong>Especificação 100% Completa p/ Cálculo e Croqui:</strong> Emissão de <strong>${(qtd * lm).toLocaleString('pt-BR')} lm/peça</strong> (${qtd * w}W) • Cone de <strong>Ø ${diamFacho}m</strong> no piso (${(comp*100).toFixed(0)}×${(larg*100).toFixed(0)}cm).</span>
+        `;
+      } else {
+        box.className = "p-2.5 rounded-xl text-[11px] border bg-amber-950/60 border-amber-500/80 text-amber-200 flex flex-wrap justify-between items-center gap-2";
+        box.innerHTML = `
+          <div>
+            <strong>⚠️ Dados Faltantes na Ficha/Link:</strong> Falta informar <strong class="text-white underline">${faltantes.join(", ")}</strong> para projetar a peça com precisão no croqui.
+          </div>
+          <button type="button" onclick="estimarDadosFaltantesLuminaria()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-[10px] px-2.5 py-1 rounded-lg transition shrink-0 shadow">
+            ⚡ Estimar Faltantes Automaticamente
+          </button>
+        `;
+      }
+    }
+
+    function estimarDadosFaltantesLuminaria() {
+      const form = document.getElementById('formatoPecaSelect').value;
+      if (lerNum('qtdLampPorPonto', 0) <= 0) document.getElementById('qtdLampPorPonto').value = 1;
+
+      let w = lerNum('watts', 0);
+      let lm = lerNum('lumens', 0);
+
+      // Se tem Watts mas o fabricante omitiu os Lúmens, estima ~80 lm/W (média real de LED de design/arquitetura)
+      if (lm <= 0 && w > 0) {
+        lm = Math.round(w * 80);
+        document.getElementById('lumens').value = lm;
+      } else if (lm <= 0 && w <= 0) {
+        w = (form === 'spot') ? 7 : 18;
+        lm = (form === 'spot') ? 525 : 1440;
+        document.getElementById('watts').value = w;
+        document.getElementById('lumens').value = lm;
+      } else if (w <= 0 && lm > 0) {
+        w = Math.max(3, Math.round(lm / 80));
+        document.getElementById('watts').value = w;
+      }
+
+      if (lerNum('anguloFacho', 0) <= 0) {
+        const angSugerido = (form === 'spot') ? 36 : (form === 'painel_red' ? 100 : 120);
+        document.getElementById('anguloFacho').value = angSugerido;
+      }
+
+      let comp = lerNum('dimCompPeca', 0);
+      let larg = lerNum('dimLargPeca', 0);
+      if (comp <= 0 && larg > 0) document.getElementById('dimCompPeca').value = larg.toFixed(2);
+      else if (larg <= 0 && comp > 0) document.getElementById('dimLargPeca').value = comp.toFixed(2);
+      else if (comp <= 0 && larg <= 0) {
+        const medPadrao = (form === 'spot') ? 0.12 : (form === 'linear' ? 1.00 : 0.35);
+        const largPadrao = (form === 'linear') ? 0.04 : medPadrao;
+        document.getElementById('dimCompPeca').value = medPadrao.toFixed(2);
+        document.getElementById('dimLargPeca').value = largPadrao.toFixed(2);
+      }
+
+      auditarEspecificacaoLuminaria();
+    }
+
+    // =========================================================================
     // SISTEMA DE HISTÓRICO (CTRL+Z / UNDO) E CÂMERA (ZOOM & PAN)
     // =========================================================================
     function salvarEstadoParaUndo() {
@@ -876,7 +990,6 @@
         luminariasPlanta,
         cenarioPlanta
       });
-      // Evita duplicar estados idênticos consecutivos
       if (historicoUndo.length > 0 && historicoUndo[historicoUndo.length - 1] === snapshot) return;
       historicoUndo.push(snapshot);
       if (historicoUndo.length > 35) historicoUndo.shift();
@@ -903,7 +1016,6 @@
       if (btn) btn.disabled = (historicoUndo.length === 0);
     }
 
-    // Atalho global Ctrl+Z
     window.addEventListener('keydown', (e) => {
       const tag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
       if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
@@ -1125,10 +1237,13 @@
       const val = document.getElementById('presetLuz').value;
       const selectEl = document.getElementById('presetLuz');
       const textoOpcao = selectEl.options[selectEl.selectedIndex]?.text || "";
-      if (!val) return;
+      if (!val) {
+        auditarEspecificacaoLuminaria();
+        return;
+      }
 
       const [lm, w, qtdL, formato, dimC, dimL, angulo] = val.split('|');
-      formatoGeometricoPreset = formato || 'spot';
+      document.getElementById('formatoPecaSelect').value = formato || 'spot';
       document.getElementById('lumens').value = lm;
       document.getElementById('watts').value = w;
       document.getElementById('qtdLampPorPonto').value = qtdL;
@@ -1136,10 +1251,16 @@
       document.getElementById('dimLargPeca').value = parseFloat(dimL).toFixed(2);
       document.getElementById('anguloFacho').value = angulo || 36;
       document.getElementById('nomeComercialLum').value = textoOpcao.split('(')[0].trim();
+      auditarEspecificacaoLuminaria();
     }
 
     function inserirCircuitoNoAmbiente(modoDistribuicao) {
+      // Se faltar algum parâmetro, estima automaticamente antes de inserir para não quebrar o croqui
+      if (lerNum('lumens', 0) <= 0 || lerNum('anguloFacho', 0) <= 0 || lerNum('dimCompPeca', 0) <= 0) {
+        estimarDadosFaltantesLuminaria();
+      }
       salvarEstadoParaUndo();
+
       let C = lerNum('comp', 0);
       let L = lerNum('larg', 0);
       let A = lerNum('alturaUtilInput', 0);
@@ -1154,6 +1275,7 @@
       if (!(A > 0)) { A = 1.90; document.getElementById('alturaUtilInput').value = A; }
       if (!(E > 0)) { E = 200; document.getElementById('luxInput').value = E; }
 
+      const formatoEscolhido = document.getElementById('formatoPecaSelect').value || 'spot';
       const qtdLamp = Math.max(1, Math.round(lerNum('qtdLampPorPonto', 1)));
       const lmUnit = Math.max(10, lerNum('lumens', 525));
       const wattsUnit = Math.max(1, lerNum('watts', 7));
@@ -1174,7 +1296,7 @@
 
       circuitosAtivos.push({
         id: circuitoId, nome: nomeCom, link: linkCom, cor: corCircuito,
-        formato: formatoGeometricoPreset, qtdLamp, lmUnit, wattsUnit, angulo, comp: compPeca, larg: largPeca
+        formato: formatoEscolhido, qtdLamp, lmUnit, wattsUnit, angulo, comp: compPeca, larg: largPeca
       });
 
       if (modoDistribuicao === 'malha_auto') {
@@ -1386,7 +1508,6 @@
       atualizarTudo();
     }
 
-    // Configurar Pan (Deslizar ao arrastar o fundo) e Zoom (Roda do Mouse) no SVG
     function configurarEventosCameraSVG() {
       const svg = document.getElementById('svgForro');
       if (!svg) return;
@@ -1398,7 +1519,6 @@
       }, { passive: false });
 
       svg.addEventListener('pointerdown', (e) => {
-        // Se clicou no fundo vazio do SVG, inicia o Pan (deslizar a planta)
         if (e.target === svg || e.target.getAttribute('data-bg-pan') === 'true') {
           arrastando = {
             tipo: 'pan_camera',
@@ -1548,7 +1668,7 @@
         boxAlerta.innerText = "Informe Largura (C) e Comprimento (L) no Passo 2 para desenhar a planta do ambiente.";
       } else if (totalPecas === 0) {
         boxAlerta.className = "p-2.5 rounded-lg text-xs border bg-sky-950/40 border-sky-700 text-sky-200";
-        boxAlerta.innerHTML = `<strong>Planta Desenhada (${area.toFixed(2)} m²):</strong> Agora escolha uma luminária no <strong>Passo 3</strong> e clique em <strong>⚡ Distribuir Malha Auto</strong>, <strong>📐 Distribuir nas Laterais</strong> ou <strong>➕ Somar Peça(s)</strong>!`;
+        boxAlerta.innerHTML = `<strong>Planta Desenhada (${area.toFixed(2)} m²):</strong> Agora escolha ou audite uma luminária no <strong>Passo 3</strong> e clique em <strong>⚡ Distribuir Malha Auto</strong>, <strong>📐 Distribuir nas Laterais</strong> ou <strong>➕ Somar Peça(s)</strong>!`;
       } else if (E > 0 && luxReal < E * 0.90) {
         boxAlerta.className = "p-2.5 rounded-lg text-xs border bg-amber-950/60 border-amber-500 text-amber-200";
         boxAlerta.innerHTML = `<strong>Atenção (Déficit Luminoso):</strong> A soma dos ${circuitosAtivos.length} circuito(s) entrega <strong>${Math.round(luxReal)} lx</strong> para os ${area.toFixed(2)} m² (Meta: ${E} lx). Adicione mais peças ou aumente os lúmens.`;
@@ -1557,6 +1677,7 @@
         boxAlerta.innerHTML = `<strong>Projeto Consolidado Validado:</strong> ${circuitosAtivos.length} circuito(s) somando <strong>${totalPecas} luminárias (${totalLampadas} lâmpadas)</strong> e entregando <strong>${Math.round(luxReal)} lx</strong> médios em ${area.toFixed(2)} m².`;
       }
 
+      auditarEspecificacaoLuminaria();
       renderizarListaCircuitosUI(area, eta, d);
       atualizarBarraInspecao(A);
       renderizarPlantaSVG(document.getElementById('svgForro'), C, L, A, kelvinNum, false);
@@ -1671,19 +1792,20 @@
     function renderizarPlantaSVG(svgEl, C, L, A, kelvinNum, modoPrint = false) {
       svgEl.innerHTML = '';
       if (!(C > 0 && L > 0)) {
-        svgEl.innerHTML = `<text x="270" y="220" text-anchor="middle" fill="#64748b" font-size="11.5">Digite Largura (C) e Comprimento (L) no Passo 2 (ou clique em "Testar Exemplo Sala em L")</text>`;
+        svgEl.innerHTML = `<text x="270" y="220" text-anchor="middle" fill="#64748b" font-size="11.5">Digite Largura (C) e Comprimento (L) no Passo 2 (ou abra o botão '?' no topo para carregar um exemplo)</text>`;
         return;
       }
 
       const form = document.getElementById('formatoSalaSelect').value;
       if (verticesSala.length < 3) verticesSala = construirPoligonoPadrao(form, C, L);
 
+      // No modoPrint (Última Página Exclusiva Fit-to-Page), usamos um canvas vertical generoso 760x880!
       const W_SVG = modoPrint ? 760 : 540;
-      const H_SVG = modoPrint ? 540 : 440;
-      const PAD_LEFT = modoPrint ? 92 : 64;
-      const PAD_TOP = modoPrint ? 76 : 56;
-      const PAD_RIGHT = modoPrint ? 65 : 46;
-      const PAD_BOTTOM = modoPrint ? 55 : 44;
+      const H_SVG = modoPrint ? 880 : 440;
+      const PAD_LEFT = modoPrint ? 96 : 64;
+      const PAD_TOP = modoPrint ? 82 : 56;
+      const PAD_RIGHT = modoPrint ? 70 : 46;
+      const PAD_BOTTOM = modoPrint ? 65 : 44;
 
       const maxX = Math.max(C, ...verticesSala.map(v => v.x));
       const maxY = Math.max(L, ...verticesSala.map(v => v.y));
@@ -1739,7 +1861,7 @@
       });
       svgEl.appendChild(defs);
 
-      // 1. DESENHO DO PISO/FORRO DO RECINTO (Permite Pan ao arrastar no fundo)
+      // 1. DESENHO DO PISO/FORRO DO RECINTO
       const corFundoSala = modoPrint ? "#ffffff" : "#0f172a";
       const corParede = modoPrint ? "#0f172a" : "#94a3b8";
 
@@ -1766,12 +1888,12 @@
       const gZero = document.createElementNS("http://www.w3.org/2000/svg", "g");
       const zeroDot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
       zeroDot.setAttribute("cx", mx(0)); zeroDot.setAttribute("cy", my(0));
-      zeroDot.setAttribute("r", "4");
+      zeroDot.setAttribute("r", "4.5");
       zeroDot.setAttribute("fill", "#ef4444");
       gZero.appendChild(zeroDot);
       const zeroTxt = document.createElementNS("http://www.w3.org/2000/svg", "text");
-      zeroTxt.setAttribute("x", mx(0) - 6); zeroTxt.setAttribute("y", my(0) - 8);
-      zeroTxt.setAttribute("font-size", modoPrint ? "9.5" : "8.5");
+      zeroTxt.setAttribute("x", mx(0) - 6); zeroTxt.setAttribute("y", my(0) - 9);
+      zeroTxt.setAttribute("font-size", modoPrint ? "10.5" : "8.5");
       zeroTxt.setAttribute("font-weight", "bold");
       zeroTxt.setAttribute("fill", modoPrint ? "#b91c1c" : "#f87171");
       zeroTxt.textContent = "REF (0,00m)";
@@ -1847,7 +1969,7 @@
         const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
         txt.setAttribute("x", cx); txt.setAttribute("y", cy + 3);
         txt.setAttribute("text-anchor", "middle");
-        txt.setAttribute("font-size", modoPrint ? "9.5" : "8.5");
+        txt.setAttribute("font-size", modoPrint ? "10.5" : "8.5");
         txt.setAttribute("font-weight", "600");
         txt.setAttribute("fill", modoPrint ? "#334155" : "#cbd5e1");
         txt.setAttribute("pointer-events", "none");
@@ -1880,7 +2002,7 @@
           bordaCone.setAttribute("fill", "none");
           bordaCone.setAttribute("stroke", circ.cor);
           bordaCone.setAttribute("stroke-opacity", modoPrint ? "0.55" : "0.28");
-          bordaCone.setAttribute("stroke-width", modoPrint ? "1.1" : "0.9");
+          bordaCone.setAttribute("stroke-width", modoPrint ? "1.2" : "0.9");
           bordaCone.setAttribute("stroke-dasharray", "4,3");
           bordaCone.setAttribute("pointer-events", "none");
           gClipped.appendChild(bordaCone);
@@ -1904,9 +2026,9 @@
               const midX = (mx(p1.x) + mx(p2.x)) / 2;
               const midY = (my(p1.y) + my(p2.y)) / 2;
               const dx = p2.x - p1.x, dy = p2.y - p1.y;
-              const nx = (dy / compParede) * (modoPrint ? 20 : 15);
-              const ny = (-dx / compParede) * (modoPrint ? 20 : 15);
-              desenharEtiquetaCota(gCotas, midX + nx, midY + ny, `${compParede.toFixed(2)}m`, modoPrint ? "#0f172a" : "#94a3b8", modoPrint, "9.5");
+              const nx = (dy / compParede) * (modoPrint ? 22 : 15);
+              const ny = (-dx / compParede) * (modoPrint ? 22 : 15);
+              desenharEtiquetaCota(gCotas, midX + nx, midY + ny, `${compParede.toFixed(2)}m`, modoPrint ? "#0f172a" : "#94a3b8", modoPrint, modoPrint ? "10.5" : "9.5");
             }
           }
         }
@@ -1924,7 +2046,7 @@
           line.setAttribute("stroke-dasharray", "3,3");
           gCotas.appendChild(line);
 
-          desenharEtiquetaCota(gCotas, px, offsetY - 22, `X:${xVal.toFixed(2)}m`, modoPrint ? "#0369a1" : "#38bdf8", modoPrint, modoPrint ? "9.5" : "8.5");
+          desenharEtiquetaCota(gCotas, px, offsetY - 24, `X:${xVal.toFixed(2)}m`, modoPrint ? "#0369a1" : "#38bdf8", modoPrint, modoPrint ? "10" : "8.5");
         });
 
         eixosY.forEach(yVal => {
@@ -1937,7 +2059,7 @@
           line.setAttribute("stroke-dasharray", "3,3");
           gCotas.appendChild(line);
 
-          desenharEtiquetaCota(gCotas, offsetX - 34, py, `Y:${yVal.toFixed(2)}m`, modoPrint ? "#0369a1" : "#38bdf8", modoPrint, modoPrint ? "9.5" : "8.5");
+          desenharEtiquetaCota(gCotas, offsetX - 36, py, `Y:${yVal.toFixed(2)}m`, modoPrint ? "#0369a1" : "#38bdf8", modoPrint, modoPrint ? "10" : "8.5");
         });
 
         if (!modoPrint && itemSelecionado && itemSelecionado.tipo === 'luminaria') {
@@ -1966,8 +2088,8 @@
 
         const dimX = lum.rot ? circ.larg : circ.comp;
         const dimY = lum.rot ? circ.comp : circ.larg;
-        const wPx = Math.max(modoPrint ? 16 : 13, dimX * scale);
-        const hPx = Math.max(modoPrint ? 16 : 13, dimY * scale);
+        const wPx = Math.max(modoPrint ? 18 : 13, dimX * scale);
+        const hPx = Math.max(modoPrint ? 18 : 13, dimY * scale);
         const cx = mx(lum.x), cy = my(lum.y);
 
         const isSel = !modoPrint && itemSelecionado && (itemSelecionado.id === lum.id || (modoArraste === 'grupo' && itemSelecionado.circuitoId === lum.circuitoId));
@@ -2011,7 +2133,7 @@
         tagTxt.setAttribute("x", cx);
         tagTxt.setAttribute("y", cy - (hPx / 2) - 4);
         tagTxt.setAttribute("text-anchor", "middle");
-        tagTxt.setAttribute("font-size", modoPrint ? "10" : "8.5");
+        tagTxt.setAttribute("font-size", modoPrint ? "11" : "8.5");
         tagTxt.setAttribute("font-weight", "900");
         tagTxt.setAttribute("fill", modoPrint ? "#0f172a" : "#ffffff");
         tagTxt.setAttribute("pointer-events", "none");
@@ -2062,7 +2184,7 @@
 
     function desenharEtiquetaCota(grupo, x, y, texto, cor, modoPrint, fontSize = "10") {
       const bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-      const wTxt = texto.length * 5.6 + 8;
+      const wTxt = texto.length * 5.8 + 8;
       bg.setAttribute("x", x - wTxt / 2);
       bg.setAttribute("y", y - 9);
       bg.setAttribute("width", wTxt);
@@ -2196,10 +2318,6 @@
         tbody.appendChild(tr);
       });
 
-      renderizarPlantaSVG(document.getElementById('svgForroPrint'), C, L, A, kelvinNum, true);
-      document.getElementById('prtLegendaForro').innerText = 
-        `Quadro Base: ${C.toFixed(2)}m × ${L.toFixed(2)}m (Área Real: ${area.toFixed(2)} m²) • As linhas tracejadas no topo (X) e na esquerda (Y) indicam os alinhamentos de trena a partir do Ponto REF (0,00m).`;
-
       const tbodyObra = document.getElementById('prtTabelaCoordenadasObra');
       tbodyObra.innerHTML = '';
 
@@ -2227,6 +2345,11 @@
         `;
         tbodyObra.appendChild(tr);
       });
+
+      // Renderiza a Última Página Exclusiva do Croqui Ampliado
+      renderizarPlantaSVG(document.getElementById('svgForroPrint'), C, L, A, kelvinNum, true);
+      document.getElementById('prtLegendaForro').innerText = 
+        `Quadro Base: ${C.toFixed(2)}m × ${L.toFixed(2)}m (Área Real: ${area.toFixed(2)} m²) • As linhas tracejadas no topo (X) e na esquerda (Y) indicam os alinhamentos de trena a partir do Ponto REF (0,00m).`;
     }
 
     function destacarMarcoKelvin(kelvinNum) {
@@ -2353,20 +2476,41 @@
       document.getElementById('boxExtratorRegex').classList.toggle('hidden');
     }
 
+    // Extrator Inteligente que lê Lúmens, Watts, Kelvin, Ângulo, Diâmetro (Ø) ou Medidas (CxL)
     function extrairDadosDoTextoColado() {
       const txt = document.getElementById('txtColadoSite').value;
       if (!txt) return;
+
       const matchLm = txt.match(/(\d[\d\.]*)\s*(?:lm|lúmens|lumens|lumen)/i);
       const matchW = txt.match(/(\d+(?:[\.,]\d+)?)\s*(?:w|watts|watt)\b/i);
       const matchK = txt.match(/(\d{4})\s*k\b/i);
       const matchAng = txt.match(/(\d{2,3})\s*(?:°|graus)/i);
+      const matchDiamCm = txt.match(/(?:ø|diâmetro|diametro)\s*(\d+(?:[\.,]\d+)?)\s*cm/i);
+      const matchDimCm = txt.match(/(\d+(?:[\.,]\d+)?)\s*[x×]\s*(\d+(?:[\.,]\d+)?)\s*(?:[x×]\s*\d+(?:[\.,]\d+)?\s*)?cm/i);
 
       if (matchLm) document.getElementById('lumens').value = matchLm[1].replace(/\./g, '');
       if (matchW) document.getElementById('watts').value = Math.round(parseFloat(matchW[1].replace(',', '.')));
       if (matchK) definirKelvin(parseInt(matchK[1]));
       if (matchAng) document.getElementById('anguloFacho').value = parseInt(matchAng[1]);
-      if (!document.getElementById('qtdLampPorPonto').value) document.getElementById('qtdLampPorPonto').value = 1;
+
+      if (matchDiamCm) {
+        const dMetros = (parseFloat(matchDiamCm[1].replace(',', '.')) / 100).toFixed(2);
+        document.getElementById('dimCompPeca').value = dMetros;
+        document.getElementById('dimLargPeca').value = dMetros;
+        document.getElementById('formatoPecaSelect').value = 'painel_red';
+      } else if (matchDimCm) {
+        const cMetros = parseFloat(matchDimCm[1].replace(',', '.')) / 100;
+        const lMetros = parseFloat(matchDimCm[2].replace(',', '.')) / 100;
+        document.getElementById('dimCompPeca').value = Math.max(cMetros, lMetros).toFixed(2);
+        document.getElementById('dimLargPeca').value = Math.min(cMetros, lMetros).toFixed(2);
+      }
+
+      if (!document.getElementById('qtdLampPorPonto').value) {
+        document.getElementById('qtdLampPorPonto').value = 1;
+      }
+
       document.getElementById('boxExtratorRegex').classList.add('hidden');
+      auditarEspecificacaoLuminaria();
     }
 
     function limparFormulario() {
